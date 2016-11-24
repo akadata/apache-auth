@@ -7,13 +7,7 @@ import Express from 'express';
 
 import config from '../../config/common';
 
-/* API methods */
-// TODO
-
 const app = Express();
-
-/* CSRF middleware */
-const parseForm = bodyParser.urlencoded({extended: false});
 
 /* Templating engine */
 app.set('view engine', 'pug');
@@ -26,8 +20,6 @@ app.use('/dist', Express.static(path.resolve(__dirname, '../../dist')));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-
-/* API endpoints */
 
 /* View endpoints */
 app.get('*', (req, res) => {

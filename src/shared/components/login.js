@@ -80,24 +80,13 @@ export default class Login extends React.Component {
           {statusAlert}
           <form>
             <input
-              ref={(elem) => {
-                this.fieldUsername = elem;
-              }}
               type="text"
               className="login-field form-input sans-serif light iota"
               placeholder="Username"
               onChange={this.setText.bind(this, 'username')}
-              onKeyDown={(evt) => {
-                if (evt.keyCode === ENTER_KEY_CODE) {
-                  this.fieldPassword.focus();
-                }
-              }}
               autoFocus
             />
             <input
-              ref={(elem) => {
-                this.fieldPassword = elem;
-              }}
               type="password"
               className="login-field form-input sans-serif light iota"
               placeholder="Password"
