@@ -1,5 +1,5 @@
 # apache-auth
-#### Frontend for a transparent cookie-based authentication layer for artbirary Apache vhosts
+#### Frontend for a transparent cookie-based authentication layer for arbitrary Apache vhosts
 
 ## Overview
 
