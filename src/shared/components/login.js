@@ -16,7 +16,9 @@ export default class Login extends React.Component {
     };
   }
 
-  submitLogin() {
+  submitLogin(evt) {
+    evt.preventDefault();
+
     this.setState({
       isLoading: true
     });
@@ -76,44 +78,46 @@ export default class Login extends React.Component {
         <Helmet title={'Login - auth.kevinlin.info'} />
         <Overlay opacity={this.state.isLoading ? 0.4 : 1}>
           {statusAlert}
-          <input
-            ref={(elem) => {
-              this.fieldUsername = elem;
-            }}
-            type="text"
-            className="login-field form-input sans-serif light iota"
-            placeholder="Username"
-            onChange={this.setText.bind(this, 'username')}
-            onKeyDown={(evt) => {
-              if (evt.keyCode === ENTER_KEY_CODE) {
-                this.fieldPassword.focus();
-              }
-            }}
-            autoFocus
-          />
-          <input
-            ref={(elem) => {
-              this.fieldPassword = elem;
-            }}
-            type="password"
-            className="login-field form-input sans-serif light iota"
-            placeholder="Password"
-            onChange={this.setText.bind(this, 'password')}
-            onKeyDown={(evt) => {
-              if (evt.keyCode === ENTER_KEY_CODE) {
-                this.buttonSubmit.click();
-              }
-            }}
-          />
-          <button
-            ref={(elem) => {
-              this.buttonSubmit = elem;
-            }}
-            className="login-btn btn sans-serif iota text-white"
-            onClick={this.submitLogin.bind(this)}
-          >
-            LOG IN
-          </button>
+          <form>
+            <input
+              ref={(elem) => {
+                this.fieldUsername = elem;
+              }}
+              type="text"
+              className="login-field form-input sans-serif light iota"
+              placeholder="Username"
+              onChange={this.setText.bind(this, 'username')}
+              onKeyDown={(evt) => {
+                if (evt.keyCode === ENTER_KEY_CODE) {
+                  this.fieldPassword.focus();
+                }
+              }}
+              autoFocus
+            />
+            <input
+              ref={(elem) => {
+                this.fieldPassword = elem;
+              }}
+              type="password"
+              className="login-field form-input sans-serif light iota"
+              placeholder="Password"
+              onChange={this.setText.bind(this, 'password')}
+              onKeyDown={(evt) => {
+                if (evt.keyCode === ENTER_KEY_CODE) {
+                  this.buttonSubmit.click();
+                }
+              }}
+            />
+            <button
+              ref={(elem) => {
+                this.buttonSubmit = elem;
+              }}
+              className="login-btn btn sans-serif iota text-white"
+              onClick={this.submitLogin.bind(this)}
+            >
+              LOG IN
+            </button>
+          </form>
         </Overlay>
       </Container>
     );
