@@ -17,7 +17,7 @@ export default class Logo extends React.Component {
           display: 'inline-block'
         }}></div>
         <div className="sans-serif gamma text-gray-10" style={{
-          marginLeft: '20px',
+          marginLeft: 25,
           display: 'inline-block'
         }}>
           KEVIN LIN
