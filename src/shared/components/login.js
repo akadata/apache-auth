@@ -1,6 +1,10 @@
+/* global window, setTimeout */
+
 import Helmet from 'react-helmet';
 import React from 'react';
 import request from 'browser-request';
+import url from 'url';
+import querystring from 'querystring';
 
 import Container from './layout/container';
 import Overlay from './layout/overlay';
@@ -36,9 +40,14 @@ export default class Login extends React.Component {
         // Safe to noop in this case; we want the response code to be set here regardless so that
         // logic later can handle it appropriately
       }
+
+      const query = querystring.parse(url.parse(window.location.href).query);
+
       this.setState({
         isLoading: false,
-        status: resp.statusCode
+        status: resp.statusCode,
+        // Don't attempt a redirect if there was an error
+        redirectURL: (resp.statusCode === 200) ? query.redirect : null
       });
     });
   }
@@ -50,9 +59,11 @@ export default class Login extends React.Component {
   }
 
   renderSuccessAlert() {
+    const message = this.state.redirectURL ? 'Redirecting you now...' : 'Please reload the target page.';
+
     return (
       <div className="alert alert-done sans-serif light iota text-green">
-        Login successful! Please reload the target page.
+        Login successful! {message}
       </div>
     );
   }
@@ -71,6 +82,13 @@ export default class Login extends React.Component {
       statusAlert = this.renderSuccessAlert();
     } else if (this.state.status) {
       statusAlert = this.renderFailureAlert();
+    }
+
+    // A successful login should set the redirect URL, if available
+    if (this.state.redirectURL) {
+      setTimeout(() => {
+        window.location.href = this.state.redirectURL;
+      }, 500);
     }
 
     return (
