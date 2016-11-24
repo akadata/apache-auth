@@ -22,7 +22,7 @@ export default class Login extends React.Component {
     });
 
     request.post({
-      url: '/auth-user',
+      url: '/auth-login',
       form: {
         /* eslint-disable camelcase */
         httpd_username: this.state.username,
