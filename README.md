@@ -23,7 +23,7 @@ Making use of this application involves setting up the configuration for the vir
 
 For example, if `apache-auth` is running locally on port `18800`:
 
-```
+```apache
 <VirtualHost *:80>
     ServerName auth.kevinlin.info
     Redirect permanent / https://auth.kevinlin.info/
@@ -85,10 +85,10 @@ This is structured deliberately so that AJAX requests to the authentication endp
 
 Securing a virtual host is as simple as adding a directive under a `Location` block:
 
-```
+```apache
 <VirtualHost ...>
 	...
-
+    
 	<Location "/">
         AuthFormProvider file
         AuthUserFile "/etc/apache2/.htpasswd"
