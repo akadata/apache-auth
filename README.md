@@ -3,7 +3,7 @@
 
 ## Overview
 
-`apache-auth` is a simple Express/React application that serves as a frontend for accepting and destroying client-side session authentication cookies distributed and validated server-side using Apache's `mod_auth_form` module. Together with `mod_auth_form`, `apache-auth` behaves as a full framework for an elegant, *fully transparent and stack-agnostic* SSO implementation for any web application.
+`apache-auth` is a simple Express/React application that serves as a frontend for accepting and destroying client-side session authentication cookies distributed and validated server-side using Apache's [`mod_auth_form`](https://httpd.apache.org/docs/2.4/mod/mod_auth_form.html) module. Together with `mod_auth_form`, `apache-auth` behaves as a full framework for an elegant, *fully transparent and stack-agnostic* SSO implementation for any web application.
 
 This project attempts to be a simple solution to auth-walling any virtual host: unlike more complex SSO implementations that require explicit integration with your application logic for authentication, `apache-auth` sits *transparently* between the client and underlying application in the virtual host configuration.
 
@@ -18,6 +18,14 @@ I use a dedicated domain `auth.kevinlin.info` for SSO authentication requests. R
 ![Architecture diagram](http://i.imgur.com/PUVdcDb.png)
 
 ## Sample configuration and usage
+
+First, the necessary modules need to be enabled. `mod_session_crypto` can be optionally enabled to make use of the `SessionCryptoPassphrase` directive for encrypted client-side cookies.
+
+```bash
+$ sudo a2enmod session
+$ sudo a2enmod session_crypto
+$ sudo a2enmod auth_form
+```
 
 Making use of this application involves setting up the configuration for the virtual host running the authentication site (in my case, `auth.kevinlin.info`), and configuration for any virtual host that should be protected with authentication.
 
@@ -105,3 +113,17 @@ Securing a virtual host is as simple as adding a directive under a `Location` bl
     </Location>
 </VirtualHost>
 ```
+
+## Deployment
+
+To deploy Apache auth on the default port of `18800`,
+
+```bash
+$ git clone https://github.com/LINKIWI/apache-auth.git
+$ cd apache-auth
+$ npm install
+$ npm run build
+$ npm run start
+```
+
+The Apache configuration above proxies an external domain to this local port. You can use monitoring services like [`pm2`](https://github.com/Unitech/pm2) to keep it alive in the background.
