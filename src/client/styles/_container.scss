@@ -1,0 +1,31 @@
+@import 'universal/colors';
+
+$shadow-black: rgba(0, 0, 0, .1);
+
+.container-box {
+  border-radius: 5px;
+  box-shadow: 0 0 50px 0 $shadow-black;
+  left: 50%;
+  margin: auto;
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: 450px;
+
+  .logo-container {
+    border-radius: 5px 5px 0 0;
+    height: 90px;
+    width: 100%;
+  }
+
+  .logo {
+    display: block;
+    height: 65px;
+    margin: auto;
+    padding-top: 20px;
+  }
+
+  .content-container {
+    padding: 40px 30px;
+  }
+}
