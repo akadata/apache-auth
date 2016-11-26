@@ -1,5 +1,6 @@
 /* global window, setTimeout */
 
+import {browserHistory} from 'react-router';
 import Helmet from 'react-helmet';
 import React from 'react';
 import request from 'browser-request';
@@ -18,6 +19,18 @@ export default class Login extends React.Component {
     this.state = {
       isLoading: false
     };
+  }
+
+  componentDidMount() {
+    // First check the authentication status; it's possible the session is already authenticated,
+    // in which case we can navigate away from this page.
+    request.get({
+      url: '/auth-check'
+    }, (err, resp) => {  // eslint-disable-line handle-callback-err
+      if (resp.statusCode === 200) {
+        browserHistory.push('/status');
+      }
+    });
   }
 
   submitLogin(evt) {
