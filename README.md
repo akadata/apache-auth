@@ -58,7 +58,7 @@ For example, if `apache-auth` is running locally on port `18800`:
         SessionCryptoPassphrase ${APACHE_SESSION_PASSPHRASE}
         SessionMaxAge 86400
 
-        Require user kiwi
+        Require valid-user
 
         ProxyPass !
     </Location>

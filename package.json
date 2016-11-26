@@ -1,7 +1,7 @@
 {
   "name": "apache-auth",
   "version": "1.0.0",
-  "description": "TODO",
+  "description": "Frontend for transparent, application-agnostic SSO with Apache's mod_auth_form",
   "main": "index.js",
   "scripts": {
     "build": "npm run build-css && npm run build-js",
