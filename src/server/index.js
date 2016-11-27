@@ -2,8 +2,9 @@
 
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import path from 'path';
 import Express from 'express';
+import morgan from 'morgan';
+import path from 'path';
 
 import config from '../../config/common';
 
@@ -17,6 +18,7 @@ app.use('/static', Express.static(path.resolve(__dirname, '../client/static')));
 app.use('/dist', Express.static(path.resolve(__dirname, '../../dist')));
 
 /* Express middleware */
+app.use(morgan('combined'));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
