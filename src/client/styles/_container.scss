@@ -19,10 +19,9 @@ $shadow-black: rgba(0, 0, 0, .1);
   }
 
   .logo {
-    display: block;
-    height: 65px;
+    cursor: pointer;
     margin: auto;
-    padding-top: 20px;
+    width: 180px;
   }
 
   .content-container {

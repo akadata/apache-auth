@@ -1,5 +1,6 @@
 /* eslint-disable react/self-closing-comp */
 
+import {browserHistory} from 'react-router';
 import React from 'react';
 
 export default class Logo extends React.Component {
@@ -10,7 +11,13 @@ export default class Logo extends React.Component {
 
   render() {
     return (
-      <div className="text-center" style={this.props.style}>
+      <div
+        className="logo text-center"
+        style={this.props.style}
+        onClick={() => {
+          browserHistory.push('/login');
+        }}
+      >
         <div className={`bg-gray-10 ${this.props.className}`} style={{
           height: 35,
           width: 15,
