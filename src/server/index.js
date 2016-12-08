@@ -24,7 +24,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 /* API endpoints */
-app.post('/api/login', require('./api/login').default);
+app.post('/api/login-duo', require('./api/login-duo').default);
+app.post('/api/login-apache', require('./api/login-apache').default);
 app.post('/api/logout', require('./api/logout').default);
 
 /* View endpoints */

@@ -8,4 +8,9 @@
   margin: 15px 0 0;
   padding: 5px 0;
   width: 100%;
+
+  &.disabled {
+    opacity: .4;
+    pointer-events: none;
+  }
 }

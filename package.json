@@ -27,6 +27,7 @@
     "cookie-parser": "^1.4.3",
     "deep-extend": "^0.4.1",
     "dottie": "^1.1.1",
+    "duo_web": "^1.0.2",
     "express": "^4.14.0",
     "morgan": "^1.7.0",
     "pug": "^2.0.0-beta6",

@@ -7,3 +7,6 @@ dist*
 node_modules
 .sass-cache
 npm-debug.log
+
+# Secrets
+config/secrets.js

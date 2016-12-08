@@ -1,4 +1,7 @@
+import duo from 'duo_web';
 import request from 'request';
+
+import secrets from '../../../config/secrets';
 
 /**
  * Attempt to log the user in.
@@ -7,7 +10,14 @@ import request from 'request';
  * @param {Object} res Express response object
  */
 function handler(req, res) {
-  request.post({
+  if (!duo.verify_response(secrets.DUO_IKEY, secrets.DUO_SKEY, secrets.DUO_AKEY, req.body.sigResponse)) {
+    return res.status(401).send(JSON.stringify({
+      success: false,
+      message: 'Duo 2FA response could not be validated.'
+    }));
+  }
+
+  return request.post({
     url: 'https://auth.kevinlin.info/auth-login',
     form: {
       /* eslint-disable camelcase */

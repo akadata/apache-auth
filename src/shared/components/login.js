@@ -1,4 +1,4 @@
-/* global window, setTimeout */
+/* global window, Duo, setTimeout */
 
 import {browserHistory} from 'react-router';
 import Helmet from 'react-helmet';
@@ -31,7 +31,27 @@ export default class Login extends React.Component {
     });
   }
 
-  submitLogin(evt) {
+  shouldComponentUpdate(nextProps, nextState) {
+    // Simple updates to the form (username, password) fields in state need not trigger a component
+    // rerender.
+    return !((this.state.username !== nextState.username) ||
+      (this.state.password !== nextState.password));
+  }
+
+  onDuoResp(duoForm) {
+    // Clear the current Duo sig request so that we hide the Duo 2FA form after an initial response
+    // is received.
+    this.setState({
+      sigRequest: null
+    });
+
+    // Grab the sig response from the Duo form element and start a second authentication request
+    // with this token for server-side validation.
+    const sigResponse = duoForm.firstChild.value;
+    this.submitLoginApache(sigResponse);
+  }
+
+  submitLoginDuo(evt) {
     evt.preventDefault();
 
     this.setState({
@@ -39,10 +59,38 @@ export default class Login extends React.Component {
     });
 
     request.post({
-      url: '/api/login',
+      url: '/api/login-duo',
       json: {
         username: this.state.username,
         password: this.state.password
+      }
+    }, (err, resp, body) => {
+      if (err) {
+        this.setState({
+          isLoading: false,
+          errorMessage: 'Failed to initialize two-factor authentication. Please try again.'
+        });
+      } else {
+        this.setState({
+          isLoading: false,
+          sigRequest: body.sigRequest,
+          duoHost: body.duoHost
+        });
+      }
+    });
+  }
+
+  submitLoginApache(sigResponse) {
+    this.setState({
+      isLoading: true
+    });
+
+    request.post({
+      url: '/api/login-apache',
+      json: {
+        username: this.state.username,
+        password: this.state.password,
+        sigResponse
       }
     }, (err, resp) => {
       if (err) {
@@ -50,18 +98,23 @@ export default class Login extends React.Component {
         // logic later can handle it appropriately
       }
 
+      const isLoginSuccess = resp.statusCode === 200;
       const query = querystring.parse(url.parse(window.location.href).query);
 
       this.setState({
         isLoading: false,
-        status: resp.statusCode,
+        // Indicates whether the user has successfully authenticated
+        isLoginSuccess,
+        // Indicates whether the user has completed the entire auth flow (successfully or not)
+        isLoginComplete: true,
         // Don't attempt a redirect if there was an error
-        redirectURL: (resp.statusCode === 200) ? query.redirect : null
+        redirectURL: isLoginSuccess ? query.redirect : null,
+        errorMessage: isLoginSuccess ? null : 'The username/password combination is incorrect. Please try again.'
       });
     });
   }
 
-  setText(key, evt) {
+  setFormState(key, evt) {
     this.setState({
       [key]: evt.target.value
     });
@@ -78,26 +131,44 @@ export default class Login extends React.Component {
   }
 
   renderFailureAlert() {
+    const {errorMessage} = this.state;
+
     return (
       <div className="alert alert-error sans-serif light iota text-red">
-        The username/password combination is incorrect. Please try again.
+        {errorMessage}
       </div>
     );
   }
 
   render() {
-    let statusAlert;
-    if (this.state.status === 200) {
-      statusAlert = this.renderSuccessAlert();
-    } else if (this.state.status) {
-      statusAlert = this.renderFailureAlert();
-    }
+    const {isLoginSuccess, isLoginComplete, redirectURL, sigRequest, duoHost} = this.state;
+
+    const statusAlert = (() => {
+      if (isLoginSuccess) {
+        return this.renderSuccessAlert();
+      } else if (isLoginComplete) {
+        return this.renderFailureAlert();
+      }
+      return null;
+    })();
 
     // A successful login should set the redirect URL, if available
-    if (this.state.redirectURL) {
+    if (redirectURL) {
       setTimeout(() => {
-        window.location.href = this.state.redirectURL;
+        window.location.href = redirectURL;
       }, 500);
+    }
+
+    if (sigRequest) {
+      setTimeout(() => {
+        Duo.init({
+          /* eslint-disable camelcase */
+          host: duoHost,
+          sig_request: sigRequest,
+          submit_callback: this.onDuoResp.bind(this)
+          /* eslint-enable camelcase */
+        });
+      }, 100);
     }
 
     return (
@@ -110,25 +181,30 @@ export default class Login extends React.Component {
               type="text"
               className="login-field form-input sans-serif light iota"
               placeholder="Username"
-              onChange={this.setText.bind(this, 'username')}
+              onChange={this.setFormState.bind(this, 'username')}
               autoFocus
             />
             <input
               type="password"
               className="login-field form-input sans-serif light iota"
               placeholder="Password"
-              onChange={this.setText.bind(this, 'password')}
+              onChange={this.setFormState.bind(this, 'password')}
             />
             <button
-              ref={(elem) => {
-                this.buttonSubmit = elem;
-              }}
-              className="login-btn btn sans-serif iota text-white"
-              onClick={this.submitLogin.bind(this)}
+              className={`login-btn btn sans-serif iota text-white ${sigRequest ? 'disabled' : ''}`}
+              onClick={this.submitLoginDuo.bind(this)}
             >
               LOG IN
             </button>
           </form>
+
+          <iframe
+            id="duo_iframe"
+            className="margin-large--top"
+            style={{
+              display: sigRequest ? 'inherit' : 'none'
+            }}
+          />
         </Overlay>
       </Container>
     );
