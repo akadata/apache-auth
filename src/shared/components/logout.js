@@ -13,7 +13,7 @@ export default class Login extends React.Component {
 
   componentDidMount() {
     request.post({
-      url: '/auth-logout'
+      url: '/api/logout'
     }, (err, resp) => {
       if (err) {
         // Safe to noop in this case; we want the response code to be set here regardless so that

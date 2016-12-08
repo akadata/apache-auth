@@ -10,8 +10,6 @@ import querystring from 'querystring';
 import Container from './layout/container';
 import Overlay from './layout/overlay';
 
-const ENTER_KEY_CODE = 13;
-
 export default class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -41,12 +39,10 @@ export default class Login extends React.Component {
     });
 
     request.post({
-      url: '/auth-login',
-      form: {
-        /* eslint-disable camelcase */
-        httpd_username: this.state.username,
-        httpd_password: this.state.password
-        /* eslint-enable camelcase */
+      url: '/api/login',
+      json: {
+        username: this.state.username,
+        password: this.state.password
       }
     }, (err, resp) => {
       if (err) {
@@ -122,11 +118,6 @@ export default class Login extends React.Component {
               className="login-field form-input sans-serif light iota"
               placeholder="Password"
               onChange={this.setText.bind(this, 'password')}
-              onKeyDown={(evt) => {
-                if (evt.keyCode === ENTER_KEY_CODE) {
-                  this.buttonSubmit.click();
-                }
-              }}
             />
             <button
               ref={(elem) => {

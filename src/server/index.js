@@ -23,12 +23,16 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+/* API endpoints */
+app.post('/api/login', require('./api/login').default);
+app.post('/api/logout', require('./api/logout').default);
+
 /* View endpoints */
 app.get('*', (req, res) => {
   res.render(path.resolve(__dirname, '../client/index'));
 });
 
 const server = app.listen(process.env.PORT || config.app.port || 3000, () => {
-  var port = server.address().port;
+  const port = server.address().port;
   console.log('Server is listening at %s', port);
 });
