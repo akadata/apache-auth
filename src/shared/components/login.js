@@ -109,7 +109,6 @@ export default class Login extends React.Component {
 
       const isLoginSuccess = resp.statusCode === 200;
 
-
       this.setState({
         isLoading: false,
         // Indicates whether the user has successfully authenticated
