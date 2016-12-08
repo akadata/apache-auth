@@ -55,7 +55,8 @@ export default class Login extends React.Component {
     evt.preventDefault();
 
     this.setState({
-      isLoading: true
+      isLoading: true,
+      isLoginComplete: false
     });
 
     request.post({
@@ -67,16 +68,24 @@ export default class Login extends React.Component {
     }, (err, resp, body) => {
       if (err) {
         this.setState({
-          isLoading: false,
+          isLoginComplete: true,
           errorMessage: 'Failed to initialize two-factor authentication. Please try again.'
+        });
+      } else if (resp.statusCode === 401) {
+        this.setState({
+          isLoginComplete: true,
+          errorMessage: 'The username/password combination is incorrect. Please try again.'
         });
       } else {
         this.setState({
-          isLoading: false,
           sigRequest: body.sigRequest,
           duoHost: body.duoHost
         });
       }
+
+      this.setState({
+        isLoading: false
+      });
     });
   }
 
@@ -99,7 +108,7 @@ export default class Login extends React.Component {
       }
 
       const isLoginSuccess = resp.statusCode === 200;
-      const query = querystring.parse(url.parse(window.location.href).query);
+
 
       this.setState({
         isLoading: false,
@@ -107,8 +116,6 @@ export default class Login extends React.Component {
         isLoginSuccess,
         // Indicates whether the user has completed the entire auth flow (successfully or not)
         isLoginComplete: true,
-        // Don't attempt a redirect if there was an error
-        redirectURL: isLoginSuccess ? query.redirect : null,
         errorMessage: isLoginSuccess ? null : 'The username/password combination is incorrect. Please try again.'
       });
     });
@@ -121,11 +128,9 @@ export default class Login extends React.Component {
   }
 
   renderSuccessAlert() {
-    const message = this.state.redirectURL ? 'Redirecting you now...' : 'Please reload the target page.';
-
     return (
       <div className="alert alert-done sans-serif light iota text-green">
-        Login successful! {message}
+        Login successful! Redirecting you now...
       </div>
     );
   }
@@ -133,18 +138,24 @@ export default class Login extends React.Component {
   renderFailureAlert() {
     const {errorMessage} = this.state;
 
-    return (
+    return errorMessage ? (
       <div className="alert alert-error sans-serif light iota text-red">
         {errorMessage}
       </div>
-    );
+    ) : null;
+  }
+
+  parseRedirectURL() {
+    const query = querystring.parse(url.parse(window.location.href).query);
+    return query.redirect;
   }
 
   render() {
-    const {isLoginSuccess, isLoginComplete, redirectURL, sigRequest, duoHost} = this.state;
+    const {isLoginSuccess, isLoginComplete, sigRequest, duoHost} = this.state;
+    const redirectURL = this.parseRedirectURL();
 
     const statusAlert = (() => {
-      if (isLoginSuccess) {
+      if (isLoginSuccess && redirectURL) {
         return this.renderSuccessAlert();
       } else if (isLoginComplete) {
         return this.renderFailureAlert();
@@ -153,10 +164,14 @@ export default class Login extends React.Component {
     })();
 
     // A successful login should set the redirect URL, if available
-    if (redirectURL) {
+    if (isLoginComplete && isLoginSuccess) {
       setTimeout(() => {
-        window.location.href = redirectURL;
-      }, 500);
+        if (redirectURL) {
+          window.location.href = redirectURL;
+        } else {
+          browserHistory.push('/status');
+        }
+      }, 100);
     }
 
     if (sigRequest) {
