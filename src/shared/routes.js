@@ -1,5 +1,5 @@
 import React from 'react';
-import {IndexRedirect, Route} from 'react-router';
+import {IndexRedirect, Redirect, Route} from 'react-router';
 
 import AppRoot from './components/app-root';
 import Login from './components/login';
@@ -12,5 +12,6 @@ export default (
     <Route path="login" component={Login} />
     <Route path="logout" component={Logout} />
     <Route path="status" component={Status} />
+    <Redirect from="*" to="/login" />
   </Route>
 );
