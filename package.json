@@ -11,7 +11,8 @@
     "build-css-watch": "mkdir -p dist && sass --watch --style compressed src/client/styles/main.scss:dist/main.css",
     "start": "node index.js",
     "lint": "eslint src test",
-    "test": "npm run lint && node test | tap-spec"
+    "test": "npm run lint && node test | tap-spec",
+    "cover": "istanbul cover test --print detail"
   },
   "repository": {
     "type": "git",
@@ -48,6 +49,7 @@
     "eslint": "^3.3.1",
     "eslint-config-uber-jsx": "^2.0.0",
     "eslint-plugin-react": "^6.1.2",
+    "istanbul": "^1.1.0-alpha.1",
     "jsdom": "^9.8.3",
     "pug-cli": "^1.0.0-alpha6",
     "sinon": "^1.17.6",

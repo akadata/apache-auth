@@ -4,9 +4,12 @@
 
 # Project artifacts
 dist*
-node_modules
-.sass-cache
+node_modules/
+.sass-cache/
 npm-debug.log
+
+# Test artifacts
+coverage/
 
 # Secrets
 config/secrets.js
