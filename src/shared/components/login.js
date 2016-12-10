@@ -76,6 +76,9 @@ export default class Login extends React.Component {
           isLoginComplete: true,
           errorMessage: 'The username/password combination is incorrect. Please try again.'
         });
+      } else if (resp.statusCode === 403) {
+        // IP is blacklisted; immediately redirect and quit further logic here.
+        return browserHistory.push('/blacklist');
       } else {
         this.setState({
           sigRequest: body.sigRequest,
@@ -83,7 +86,7 @@ export default class Login extends React.Component {
         });
       }
 
-      this.setState({
+      return this.setState({
         isLoading: false
       });
     });

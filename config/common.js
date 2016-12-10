@@ -17,7 +17,7 @@ const commonConfig = {
     // The duration of each IP blacklist
     TTL: 24 * 60 * 60 * 1000,
     // The maximum number of failed login attempts to blacklist the IP
-    maxFailedAttempts: 0
+    maxFailedAttempts: 5
   }
 };
 
