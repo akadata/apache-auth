@@ -12,10 +12,13 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = {
-  entry: path.resolve(__dirname, '../src/client/scripts/client.js'),
+  entry: {
+    bundle: path.resolve(__dirname, '../src/client/scripts/client.js'),
+    blacklist: path.resolve(__dirname, '../src/client/scripts/blacklist.js')
+  },
   output: {
     path: path.resolve(__dirname, '../dist'),
-    filename: 'bundle.js'
+    filename: '[name].js'
   },
   module: {
     loaders: [
