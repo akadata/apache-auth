@@ -1,6 +1,7 @@
 import React from 'react';
 import {IndexRedirect, Redirect, Route} from 'react-router';
 
+import Admin from './components/admin';
 import AppRoot from './components/app-root';
 import Blacklist from './components/blacklist';
 import Login from './components/login';
@@ -14,6 +15,7 @@ export default (
     <Route path="logout" component={Logout} />
     <Route path="status" component={Status} />
     <Route path="blacklist" component={Blacklist} />
+    <Route path="admin" component={Admin} />
     <Redirect from="*" to="/login" />
   </Route>
 );
