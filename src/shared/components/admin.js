@@ -26,14 +26,10 @@ export default class Admin extends React.Component {
     }, (err, resp, body) => {
       this.setState({isLoading: false});
 
-      if (err) {
-        return this.setState({
-          errorMessage: 'There was an error retrieving blacklist entries. Please try again.'
-        });
-      } else if (resp.statusCode !== 200) {
+      if (err || (resp.statusCode !== 200)) {
         setTimeout(() => {
           browserHistory.push('/login');
-        }, 500);
+        }, 2000);
         return this.setState({
           errorMessage: 'Your session must be authenticated to perform this request. ' +
             'Redirecting you now...'
