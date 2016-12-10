@@ -8,10 +8,12 @@ import path from 'path';
 import raven from 'raven';
 
 import config from '../../config/common';
+import Context from './context';
 import secrets from '../../config/secrets';
 
 /* Initialization */
 const app = Express();
+const ctx = Context();
 const sentryClient = new raven.Client(secrets.SENTRY_DSN);
 sentryClient.patchGlobal();
 
@@ -30,14 +32,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 /* API endpoints */
-app.post('/api/login-duo', require('./api/login-duo').default);
-app.post('/api/login-apache', require('./api/login-apache').default);
+app.post('/api/login-duo', require('./api/login-duo').default.bind(null, ctx));
+app.post('/api/login-apache', require('./api/login-apache').default.bind(null, ctx));
 app.post('/api/logout', require('./api/logout').default);
 
 /* View endpoints */
-app.get('*', (req, res) => {
-  res.render(path.resolve(__dirname, '../client/index'));
-});
+app.get('*', require('./view/main').default.bind(null, ctx));
 
 app.use(raven.middleware.express.errorHandler(secrets.SENTRY_DSN));
 
