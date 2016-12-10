@@ -12,7 +12,8 @@
     "start": "node index.js",
     "lint": "eslint src test",
     "test": "npm run lint && node test | tap-spec",
-    "cover": "istanbul cover test --print detail"
+    "cover": "istanbul cover test --print detail",
+    "coveralls": "istanbul cover test --print detail && cat coverage/lcov.info | coveralls"
   },
   "repository": {
     "type": "git",
@@ -47,6 +48,7 @@
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.5.0",
+    "coveralls": "^2.11.15",
     "eslint": "^3.3.1",
     "eslint-config-uber-jsx": "^2.0.0",
     "eslint-plugin-react": "^6.1.2",

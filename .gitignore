@@ -13,3 +13,4 @@ coverage/
 
 # Secrets
 config/secrets.js
+.coveralls.yml
