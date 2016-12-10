@@ -34,7 +34,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 /* API endpoints */
 app.post('/api/login-duo', require('./api/login-duo').default.bind(null, ctx));
 app.post('/api/login-apache', require('./api/login-apache').default.bind(null, ctx));
-app.post('/api/logout', require('./api/logout').default);
+app.post('/api/logout', require('./api/logout').default.bind(null, ctx));
+app.post('/api/blacklist-entries', require('./api/blacklist-entries').default.bind(null, ctx));
 
 /* View endpoints */
 app.get('*', require('./view/main').default.bind(null, ctx));

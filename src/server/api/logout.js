@@ -4,10 +4,11 @@ import request from 'request';
 /**
  * Attempt to log the user out.
  *
+ * @param {Object} ctx Server-side application context
  * @param {Object} req Express request object
  * @param {Object} res Express response object
  */
-function handler(req, res) {
+function handler(ctx, req, res) {
   request.post({
     url: 'https://auth.kevinlin.info/auth-logout',
     headers: {
