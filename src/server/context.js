@@ -1,3 +1,4 @@
+import dottie from 'dottie';
 import LRU from 'lru-cache';
 
 import config from '../../config/common';
@@ -33,7 +34,11 @@ function initBlacklistCache() {
    */
   function increment(ip) {
     if (ip) {
-      cache.set(ip.toString(), (cache.get(ip.toString()) || 0) + 1);
+      const existingCount = dottie.get(cache.get(ip.toString()), 'count', 0);
+      cache.set(ip.toString(), {
+        count: existingCount + 1,
+        timestamp: Date.now()
+      });
     }
   }
 
@@ -56,15 +61,30 @@ function initBlacklistCache() {
    */
   function isBlacklisted(ip) {
     if (ip) {
-      return (cache.peek(ip.toString()) || 0) >= config.blacklist.maxFailedAttempts;
+      const count = dottie.get(cache.peek(ip.toString()), 'count', 0);
+      return count >= config.blacklist.maxFailedAttempts;
     }
     return false;
+  }
+
+  /**
+   * Retrieve an object mapping of all blacklisted (or almost-blacklisted) IP addresses with the
+   * number of failed attempts and the timestamp of the most recent failure.
+   *
+   * @returns {Object} Object mapping IP addresses to an object with keys "count" and "timestamp"
+   */
+  function getEntries() {
+    return cache.keys().reduce((entries, ip) => {
+      entries[ip] = cache.peek(ip);
+      return entries;
+    }, {});
   }
 
   return {
     increment,
     remove,
-    isBlacklisted
+    isBlacklisted,
+    getEntries
   };
 }
 
