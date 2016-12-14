@@ -7,7 +7,7 @@ import request from 'request';
  * @param password The corresponding password.
  * @param cb Request callback on completion of authentication attempt.
  */
-function authenticate(username, password, cb) {
+function check(username, password, cb) {
   request.post({
     url: 'https://auth.kevinlin.info/auth-login',
     form: {
@@ -18,5 +18,9 @@ function authenticate(username, password, cb) {
     }
   }, cb);
 }
+
+const authenticate = {
+  check
+};
 
 export default authenticate;

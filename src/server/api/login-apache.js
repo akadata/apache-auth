@@ -16,7 +16,8 @@ function handler(ctx, req, res) {
   const ip = dottie.get(req, 'headers.x-forwarded-for') ||
     dottie.get(req, 'connection.remoteAddress');
   if (ctx.blacklist.isBlacklisted(ip)) {
-    return res.status(403).send({
+    res.status(403);
+    return res.send({
       success: false,
       message: 'This IP address is blacklisted.'
     });
@@ -24,14 +25,16 @@ function handler(ctx, req, res) {
 
   // Verify the 2FA response from Duo
   if (!duo.verify_response(secrets.DUO_IKEY, secrets.DUO_SKEY, secrets.DUO_AKEY, req.body.sigResponse)) {
-    return res.status(401).send(JSON.stringify({
+    res.status(401);
+    return res.send(JSON.stringify({
       success: false,
       message: 'Duo 2FA response could not be validated.'
     }));
   }
 
   // Then, authenticate against Apache one more time, setting the client cookie
-  return authenticate(req.body.username, req.body.password, (err, resp) => {  // eslint-disable-line handle-callback-err
+  // eslint-disable-line handle-callback-err
+  return authenticate.check(req.body.username, req.body.password, (err, resp) => {
     // Replicate the Apache handler's status code
     res.status(resp.statusCode);
     // Replicate the Apache handler's cookie header

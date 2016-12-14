@@ -23,7 +23,7 @@ function handler(ctx, req, res) {
   }
 
   // Validate the correctness of the provided credentials
-  return authenticate(req.body.username, req.body.password, (err, resp) => {
+  return authenticate.check(req.body.username, req.body.password, (err, resp) => {
     if (err || (resp.statusCode !== 200)) {
       // Increment the number of times a login from this IP address has failed
       ctx.blacklist.increment(ip);
