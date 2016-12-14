@@ -5,7 +5,7 @@ import range from 'range';
 /**
  * Create an instance of Context with the given list of blacklisted IPs.
  *
- * @param {Array} blacklistIPs Array of IPs to blacklist in the context.
+ * @param {Array=} blacklistIPs Array of IPs to blacklist in the context.
  * @returns {Object} Initialized context object.
  */
 function create(blacklistIPs) {

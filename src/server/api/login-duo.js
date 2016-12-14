@@ -16,7 +16,8 @@ function handler(ctx, req, res) {
   const ip = dottie.get(req, 'headers.x-forwarded-for') ||
     dottie.get(req, 'connection.remoteAddress');
   if (ctx.blacklist.isBlacklisted(ip)) {
-    return res.status(403).send({
+    res.status(403);
+    return res.send({
       success: false,
       message: 'This IP address is blacklisted.'
     });
@@ -27,7 +28,8 @@ function handler(ctx, req, res) {
     if (err || (resp.statusCode !== 200)) {
       // Increment the number of times a login from this IP address has failed
       ctx.blacklist.increment(ip);
-      return res.status(401).send({
+      res.status(401);
+      return res.send({
         success: false,
         message: 'The username/password combination is incorrect.'
       });
@@ -41,6 +43,7 @@ function handler(ctx, req, res) {
       req.body.username
     );
 
+    res.status(200);
     return res.send({
       success: true,
       message: null,
