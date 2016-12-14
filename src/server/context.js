@@ -75,7 +75,10 @@ function initBlacklistCache() {
    */
   function getEntries() {
     return cache.keys().reduce((entries, ip) => {
-      entries[ip] = cache.peek(ip);
+      const details = cache.peek(ip);
+      if (details) {
+        entries[ip] = details;
+      }
       return entries;
     }, {});
   }
