@@ -1,6 +1,6 @@
+import {mount} from 'enzyme';
 import React from 'react';
 import request from 'browser-request';
-import {mount} from 'enzyme';
 import sinon from 'sinon';
 import test from 'tape';
 
