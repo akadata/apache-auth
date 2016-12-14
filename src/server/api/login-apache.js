@@ -26,20 +26,24 @@ function handler(ctx, req, res) {
   // Verify the 2FA response from Duo
   if (!duo.verify_response(secrets.DUO_IKEY, secrets.DUO_SKEY, secrets.DUO_AKEY, req.body.sigResponse)) {
     res.status(401);
-    return res.send(JSON.stringify({
+    return res.send({
       success: false,
       message: 'Duo 2FA response could not be validated.'
-    }));
+    });
   }
 
   // Then, authenticate against Apache one more time, setting the client cookie
-  // eslint-disable-line handle-callback-err
   return authenticate.check(req.body.username, req.body.password, (err, resp) => {
+    if (err) {
+      // Even if there is an error, we're safe to continue: the response from Apache should be
+      // directly replicated to the client like a proxy
+    }
+
     // Replicate the Apache handler's status code
     res.status(resp.statusCode);
     // Replicate the Apache handler's cookie header
     res.set('Set-Cookie', resp.headers['set-cookie']);
-    res.send(JSON.stringify({}));
+    res.send({});
   });
 }
 
