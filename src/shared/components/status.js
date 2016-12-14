@@ -28,7 +28,7 @@ export default class Login extends React.Component {
 
   renderSuccessAlert() {
     return (
-      <div className="status-box alert alert-done sans-serif light iota text-green">
+      <div className="session-authenticated status-box alert alert-done sans-serif light iota text-green">
         Your session is authenticated. Click <Link className="sans-serif text-green" to="/logout">here</Link> to logout.
       </div>
     );
@@ -36,7 +36,7 @@ export default class Login extends React.Component {
 
   renderFailureAlert() {
     return (
-      <div className="status-box alert alert-error sans-serif light iota text-red">
+      <div className="session-not-authenticated status-box alert alert-error sans-serif light iota text-red">
         Your session is not authenticated. Please login <Link className="text-red sans-serif" to="/">here</Link>.
       </div>
     );
