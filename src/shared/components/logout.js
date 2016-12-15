@@ -27,7 +27,7 @@ export default class Login extends React.Component {
 
   renderSuccessAlert() {
     return (
-      <div className="status-box alert sans-serif light iota text-blue">
+      <div className="logout-success-alert status-box alert sans-serif light iota text-blue">
         You have been logged out.
       </div>
     );
@@ -35,7 +35,7 @@ export default class Login extends React.Component {
 
   renderFailureAlert() {
     return (
-      <div className="status-box alert alert-error sans-serif light iota text-red">
+      <div className="logout-error-alert status-box alert alert-error sans-serif light iota text-red">
         There was an error logging you out.
       </div>
     );
