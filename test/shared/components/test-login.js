@@ -135,21 +135,10 @@ test('Failure to initialize Duo 2FA', (t) => {
   t.notOk(requestStub.called, 'No authentication request is made yet');
 
   // Enter in username/password credentials and submit
-  login.find('.username-field').simulate('change', {
-    target: {
-      value: 'username'
-    }
-  });
-  login.find('.password-field').simulate('change', {
-    target: {
-      value: 'password'
-    }
-  });
-  t.equal(login.state().username, 'username', 'Username state is set properly');
-  t.equal(login.state().password, 'password', 'Password state is set properly');
+  setLoginCredentials(login, 'username', 'password', t);
+  login.find('.login-btn').simulate('click');
 
   // Request in-flight
-  login.find('.login-btn').simulate('click');
   t.ok(requestStub.called, 'Request is made after click');
   t.ok(login.state().isLoading, 'isLoading state is true after click');
   t.notOk(login.state().isLoginComplete, 'isLoginComplete state is false');
@@ -168,3 +157,181 @@ test('Failure to initialize Duo 2FA', (t) => {
   clock.restore();
   t.end();
 });
+
+test('Incorrect username/password pair', (t) => {
+  const clock = sinon.useFakeTimers();
+  sinon.stub(request, 'get', (opts, cb) => {
+    t.equal(opts.url, '/auth-check', 'Authentication check endpoint is correct');
+
+    setTimeout(() => cb(null, {
+      statusCode: 403
+    }), 200);
+  });
+  const requestStub = sinon.stub(request, 'post', (opts, cb) => {
+    t.equal(opts.url, '/api/login-duo', 'Duo 2FA initialization endpoint is correct');
+    t.deepEqual(opts.json, {
+      username: 'username',
+      password: 'password'
+    }, 'JSON body contains credentials');
+
+    setTimeout(() => cb(null, {
+      statusCode: 401
+    }), 400);
+  });
+
+  const login = mount(
+    <Login />
+  );
+
+  clock.tick(205);
+  t.notOk(login.state().isLoading, 'isLoading state is false');
+  t.notOk(login.state().isLoginComplete, 'isLoginComplete state is false');
+  t.notOk(requestStub.called, 'No authentication request is made yet');
+
+  // Enter in username/password credentials and submit
+  setLoginCredentials(login, 'username', 'password', t);
+  login.find('.login-btn').simulate('click');
+
+  // Request in-flight
+  t.ok(requestStub.called, 'Request is made after click');
+  t.ok(login.state().isLoading, 'isLoading state is true after click');
+  t.notOk(login.state().isLoginComplete, 'isLoginComplete state is false');
+
+  // Request completed
+  clock.tick(1005);
+  t.ok(login.state().isLoginComplete, 'isLoginComplete state is true after request completed');
+  t.notOk(login.state().isLoading, 'isLoading is falsified');
+  t.equal(login.state().errorMessage, 'The username/password combination is incorrect. Please try again.',
+    'Error message is set appropriately');
+  t.equal(login.find('.login-success-alert').length, 0, 'No success alert is displayed');
+  t.equal(login.find('.login-error-alert').length, 1, 'Error alert is displayed');
+
+  request.get.restore();
+  request.post.restore();
+  clock.restore();
+  t.end();
+});
+
+test('Blacklisted IP on Duo 2FA initialization', (t) => {
+  const clock = sinon.useFakeTimers();
+  sinon.stub(request, 'get', (opts, cb) => {
+    t.equal(opts.url, '/auth-check', 'Authentication check endpoint is correct');
+
+    setTimeout(() => cb(null, {
+      statusCode: 403
+    }), 200);
+  });
+  const historyStub = sinon.stub(browserHistory, 'push');
+  const requestStub = sinon.stub(request, 'post', (opts, cb) => {
+    t.equal(opts.url, '/api/login-duo', 'Duo 2FA initialization endpoint is correct');
+    t.deepEqual(opts.json, {
+      username: 'username',
+      password: 'password'
+    }, 'JSON body contains credentials');
+
+    setTimeout(() => cb(null, {
+      statusCode: 403
+    }), 400);
+  });
+
+  const login = mount(
+    <Login />
+  );
+
+  clock.tick(205);
+  t.notOk(login.state().isLoading, 'isLoading state is false');
+  t.notOk(login.state().isLoginComplete, 'isLoginComplete state is false');
+  t.notOk(requestStub.called, 'No authentication request is made yet');
+
+  // Enter in username/password credentials and submit
+  setLoginCredentials(login, 'username', 'password', t);
+  login.find('.login-btn').simulate('click');
+
+  // Request in-flight
+  t.ok(requestStub.called, 'Request is made after click');
+  t.ok(login.state().isLoading, 'isLoading state is true after click');
+  t.notOk(login.state().isLoginComplete, 'isLoginComplete state is false');
+
+  // Request completed
+  clock.tick(1005);
+  t.ok(historyStub.calledWith('/blacklist'), 'Immediate redirect to blacklist');
+
+  browserHistory.push.restore();
+  request.get.restore();
+  request.post.restore();
+  clock.restore();
+  t.end();
+});
+
+test('Successful Duo 2FA initialization', (t) => {
+  const clock = sinon.useFakeTimers();
+  sinon.stub(request, 'get', (opts, cb) => {
+    t.equal(opts.url, '/auth-check', 'Authentication check endpoint is correct');
+
+    setTimeout(() => cb(null, {
+      statusCode: 403
+    }), 200);
+  });
+  const requestStub = sinon.stub(request, 'post', (opts, cb) => {
+    t.equal(opts.url, '/api/login-duo', 'Duo 2FA initialization endpoint is correct');
+    t.deepEqual(opts.json, {
+      username: 'username',
+      password: 'password'
+    }, 'JSON body contains credentials');
+
+    setTimeout(() => cb(null, {
+      statusCode: 200
+    }, {
+      sigRequest: 'sigRequest',
+      duoHost: 'duoHost'
+    }), 400);
+  });
+
+  const login = mount(
+    <Login />
+  );
+
+  clock.tick(205);
+  t.notOk(login.state().isLoading, 'isLoading state is false');
+  t.notOk(login.state().isLoginComplete, 'isLoginComplete state is false');
+  t.notOk(requestStub.called, 'No authentication request is made yet');
+
+  // Enter in username/password credentials and submit
+  setLoginCredentials(login, 'username', 'password', t);
+  login.find('.login-btn').simulate('click');
+
+  // Request in-flight
+  t.ok(requestStub.called, 'Request is made after click');
+  t.ok(login.state().isLoading, 'isLoading state is true after click');
+  t.notOk(login.state().isLoginComplete, 'isLoginComplete state is false');
+
+  // Request completed
+  clock.tick(1005);
+  t.notOk(login.state().isLoginComplete, 'isLoginComplete state is still false after Duo init');
+  t.notOk(login.state().isLoading, 'isLoading is falsified');
+  t.notOk(login.state().errorMessage, 'No error message state is set');
+  t.equal(login.state().sigRequest, 'sigRequest', 'sigRequest state is saved');
+  t.equal(login.state().duoHost, 'duoHost', 'duoHost state is saved');
+  t.equal(login.find('.login-success-alert').length, 0, 'No success alert is displayed');
+  t.equal(login.find('.login-error-alert').length, 0, 'No error alert is displayed');
+
+  request.get.restore();
+  request.post.restore();
+  clock.restore();
+  t.end();
+});
+
+function setLoginCredentials(component, username, password, t) {
+  component.find('.username-field').simulate('change', {
+    target: {
+      value: username
+    }
+  });
+  component.find('.password-field').simulate('change', {
+    target: {
+      value: password
+    }
+  });
+  t.equal(component.state().username, username, 'Username state is set properly');
+  t.equal(component.state().password, password, 'Password state is set properly');
+}
