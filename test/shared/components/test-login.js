@@ -1,7 +1,8 @@
-/* global setTimeout */
+/* global global,setTimeout */
 
 import {browserHistory} from 'react-router';
 import {mount, shallow} from 'enzyme';
+import jsdom from 'jsdom';
 import React from 'react';
 import request from 'browser-request';
 import sinon from 'sinon';
@@ -321,7 +322,7 @@ test('Successful Duo 2FA initialization', (t) => {
   t.end();
 });
 
-test('Duo response after 2FA', (t) => {
+test('Duo response after 2FA with redirect', (t) => {
   const clock = sinon.useFakeTimers();
   const historyStub = sinon.stub(browserHistory, 'push');
   const requestStub = sinon.stub(request, 'post', (opts, cb) => {
@@ -338,6 +339,8 @@ test('Duo response after 2FA', (t) => {
     }), 1000);
   });
 
+  // Set a redirect URL before rendering the component
+  jsdom.changeURL(global.window, 'http://localhost:18800/login?redirect=https://google.com');
   const login = shallow(
     <Login />
   );
@@ -364,8 +367,39 @@ test('Duo response after 2FA', (t) => {
 
   // Redirect after success
   clock.tick(105);
+  t.equal(login.find('.login-success-alert').length, 1, 'Login success alert is displayed');
+  t.notOk(historyStub.called, 'No modifications to browser history');
+
+  browserHistory.push.restore();
+  request.post.restore();
+  clock.restore();
+  t.end();
+});
+
+test('Duo response after 2FA without redirect', (t) => {
+  const clock = sinon.useFakeTimers();
+  const historyStub = sinon.stub(browserHistory, 'push');
+  sinon.stub(request, 'post', (opts, cb) => cb(null, {statusCode: 200}));
+
+  // Set a redirect URL before rendering the component
+  jsdom.changeURL(global.window, 'http://localhost:18800');
+  const login = shallow(
+    <Login />
+  );
+  setLoginCredentials(login, 'username', 'password', t);
+
+  // Trigger a Duo callback
+  login.instance().onDuoResp({
+    firstChild: {
+      value: 'sigresponse'
+    }
+  });
+
+  // Redirect after success
+  clock.tick(105);
   t.ok(historyStub.calledWith('/status'), 'Redirect to status page');
 
+  browserHistory.push.restore();
   request.post.restore();
   clock.restore();
   t.end();
@@ -378,17 +412,6 @@ test('Parse redirect URL from window href', (t) => {
 
   const url = 'http://localhost:18800/login?redirect=https://google.com';
   t.equal(login.instance().parseRedirectURL(url), 'https://google.com', 'Redirect URL is parsed correctly');
-
-  t.end();
-});
-
-test('Rendering of success alert', (t) => {
-  const login = shallow(
-    <Login />
-  );
-  const alert = shallow(login.instance().renderSuccessAlert());
-
-  t.equal(alert.find('.login-success-alert').length, 1, 'Alert is rendered');
 
   t.end();
 });
