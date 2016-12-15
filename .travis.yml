@@ -3,6 +3,11 @@ node_js:
   - "6"
   - "5"
   - "4"
+install:
+  - gem install sass
+  - npm install
 script:
+  - cp config/secrets.js.template config/secrets.js
   - npm run lint
+  - npm run build
   - npm run coveralls
