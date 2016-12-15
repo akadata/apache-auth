@@ -321,6 +321,56 @@ test('Successful Duo 2FA initialization', (t) => {
   t.end();
 });
 
+test('Duo response after 2FA', (t) => {
+  const clock = sinon.useFakeTimers();
+  const historyStub = sinon.stub(browserHistory, 'push');
+  const requestStub = sinon.stub(request, 'post', (opts, cb) => {
+    t.equal(opts.url, '/api/login-apache', 'Apache login endpoint is correct');
+    t.deepEqual(opts.json, {
+      username: 'username',
+      password: 'password',
+      sigResponse: 'sigresponse'
+    }, 'JSON data passed to login endpoint is correct');
+
+    // Simulate a 1000 ms network delay
+    setTimeout(() => cb(null, {
+      statusCode: 200
+    }), 1000);
+  });
+
+  const login = shallow(
+    <Login />
+  );
+  setLoginCredentials(login, 'username', 'password', t);
+
+  // Trigger a Duo callback
+  login.instance().onDuoResp({
+    firstChild: {
+      value: 'sigresponse'
+    }
+  });
+
+  // Request in-flight
+  t.notOk(login.state().sigRequest, 'State for sigRequest is cleared');
+  t.ok(login.state().isLoading, 'isLoading is set');
+  t.ok(requestStub.called, 'Request is made to Apache login endpoint');
+
+  // Request completed
+  clock.tick(1005);
+  t.notOk(login.state().isLoading, 'isLoading is falsified');
+  t.ok(login.state().isLoginComplete, 'isLoginComplete is true');
+  t.ok(login.state().isLoginSuccess, 'isLoginSuccess is true');
+  t.notOk(login.state().errorMessage, 'No error message');
+
+  // Redirect after success
+  clock.tick(105);
+  t.ok(historyStub.calledWith('/status'), 'Redirect to status page');
+
+  request.post.restore();
+  clock.restore();
+  t.end();
+});
+
 test('Parse redirect URL from window href', (t) => {
   const login = shallow(
     <Login />
@@ -328,6 +378,17 @@ test('Parse redirect URL from window href', (t) => {
 
   const url = 'http://localhost:18800/login?redirect=https://google.com';
   t.equal(login.instance().parseRedirectURL(url), 'https://google.com', 'Redirect URL is parsed correctly');
+
+  t.end();
+});
+
+test('Rendering of success alert', (t) => {
+  const login = shallow(
+    <Login />
+  );
+  const alert = shallow(login.instance().renderSuccessAlert());
+
+  t.equal(alert.find('.login-success-alert').length, 1, 'Alert is rendered');
 
   t.end();
 });
