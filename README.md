@@ -1,5 +1,8 @@
 # apache-auth
-#### Frontend for a transparent cookie-based authentication layer for arbitrary Apache vhosts
+
+[![Build Status](https://travis-ci.org/LINKIWI/apache-auth.svg?branch=master)](https://travis-ci.org/LINKIWI/apache-auth) [![Coverage Status](https://coveralls.io/repos/github/LINKIWI/apache-auth/badge.svg?branch=master)](https://coveralls.io/github/LINKIWI/apache-auth?branch=master)
+
+Frontend for a transparent cookie-based authentication layer for arbitrary Apache vhosts
 
 ## Overview
 
