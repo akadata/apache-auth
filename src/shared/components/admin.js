@@ -46,7 +46,7 @@ export default class Admin extends React.Component {
     const {errorMessage} = this.state;
 
     return errorMessage ? (
-      <div className="alert alert-error sans-serif light iota text-red">
+      <div className="blacklist-error alert alert-error sans-serif light iota text-red">
         {errorMessage}
       </div>
     ) : null;
@@ -74,7 +74,7 @@ export default class Admin extends React.Component {
                 blacklistEntries.map((entry) => (
                   <tr
                     key={`table-entry_${entry.ip}`}
-                    className={entry.isBlacklisted ? 'alert-error text-red' : 'text-gray-70'}
+                    className={`blacklist-entry ${entry.isBlacklisted ? 'alert-error text-red' : 'text-gray-70'}`}
                   >
                     <td>{entry.ip}</td>
                     <td>{entry.count}</td>

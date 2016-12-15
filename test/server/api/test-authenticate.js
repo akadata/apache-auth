@@ -19,8 +19,8 @@ test('Authentication request of correct shape', (t) => {
 
   authenticate.check('username', 'password', () => {
     t.ok(requestStub.called, 'Network request is made');
-    request.post.restore();
 
+    request.post.restore();
     t.end();
   });
 });
