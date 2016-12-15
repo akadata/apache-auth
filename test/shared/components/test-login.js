@@ -1,7 +1,7 @@
 /* global setTimeout */
 
 import {browserHistory} from 'react-router';
-import {mount} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import React from 'react';
 import request from 'browser-request';
 import sinon from 'sinon';
@@ -318,6 +318,17 @@ test('Successful Duo 2FA initialization', (t) => {
   request.get.restore();
   request.post.restore();
   clock.restore();
+  t.end();
+});
+
+test('Parse redirect URL from window href', (t) => {
+  const login = shallow(
+    <Login />
+  );
+
+  const url = 'http://localhost:18800/login?redirect=https://google.com';
+  t.equal(login.instance().parseRedirectURL(url), 'https://google.com', 'Redirect URL is parsed correctly');
+
   t.end();
 });
 

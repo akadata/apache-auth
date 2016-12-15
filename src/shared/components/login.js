@@ -150,14 +150,14 @@ export default class Login extends React.Component {
     ) : null;
   }
 
-  parseRedirectURL() {
-    const query = querystring.parse(url.parse(window.location.href).query);
+  parseRedirectURL(windowURL) {
+    const query = querystring.parse(url.parse(windowURL).query);
     return query.redirect;
   }
 
   render() {
     const {isLoading, isLoginSuccess, isLoginComplete, sigRequest, duoHost} = this.state;
-    const redirectURL = this.parseRedirectURL();
+    const redirectURL = this.parseRedirectURL(window.location.href);
 
     const statusAlert = (() => {
       if (isLoginSuccess && redirectURL) {
