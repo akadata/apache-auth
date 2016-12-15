@@ -105,3 +105,66 @@ test('Typing in text fields updates component state', (t) => {
   request.get.restore();
   t.end();
 });
+
+test('Failure to initialize Duo 2FA', (t) => {
+  const clock = sinon.useFakeTimers();
+  sinon.stub(request, 'get', (opts, cb) => {
+    t.equal(opts.url, '/auth-check', 'Authentication check endpoint is correct');
+
+    setTimeout(() => cb(null, {
+      statusCode: 403
+    }), 200);
+  });
+  const requestStub = sinon.stub(request, 'post', (opts, cb) => {
+    t.equal(opts.url, '/api/login-duo', 'Duo 2FA initialization endpoint is correct');
+    t.deepEqual(opts.json, {
+      username: 'username',
+      password: 'password'
+    }, 'JSON body contains credentials');
+
+    setTimeout(() => cb({}), 400);
+  });
+
+  const login = mount(
+    <Login />
+  );
+
+  clock.tick(205);
+  t.notOk(login.state().isLoading, 'isLoading state is false');
+  t.notOk(login.state().isLoginComplete, 'isLoginComplete state is false');
+  t.notOk(requestStub.called, 'No authentication request is made yet');
+
+  // Enter in username/password credentials and submit
+  login.find('.username-field').simulate('change', {
+    target: {
+      value: 'username'
+    }
+  });
+  login.find('.password-field').simulate('change', {
+    target: {
+      value: 'password'
+    }
+  });
+  t.equal(login.state().username, 'username', 'Username state is set properly');
+  t.equal(login.state().password, 'password', 'Password state is set properly');
+
+  // Request in-flight
+  login.find('.login-btn').simulate('click');
+  t.ok(requestStub.called, 'Request is made after click');
+  t.ok(login.state().isLoading, 'isLoading state is true after click');
+  t.notOk(login.state().isLoginComplete, 'isLoginComplete state is false');
+
+  // Request completed
+  clock.tick(1005);
+  t.ok(login.state().isLoginComplete, 'isLoginComplete state is true after request completed');
+  t.notOk(login.state().isLoading, 'isLoading is falsified');
+  t.equal(login.state().errorMessage, 'Failed to initialize two-factor authentication. Please try again.',
+    'Error message is set appropriately');
+  t.equal(login.find('.login-success-alert').length, 0, 'No success alert is displayed');
+  t.equal(login.find('.login-error-alert').length, 1, 'Error alert is displayed');
+
+  request.get.restore();
+  request.post.restore();
+  clock.restore();
+  t.end();
+});

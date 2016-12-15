@@ -134,7 +134,7 @@ export default class Login extends React.Component {
 
   renderSuccessAlert() {
     return (
-      <div className="alert alert-done sans-serif light iota text-green">
+      <div className="login-success-alert alert alert-done sans-serif light iota text-green">
         Login successful! Redirecting you now...
       </div>
     );
@@ -144,7 +144,7 @@ export default class Login extends React.Component {
     const {errorMessage} = this.state;
 
     return errorMessage ? (
-      <div className="alert alert-error sans-serif light iota text-red">
+      <div className="login-error-alert alert alert-error sans-serif light iota text-red">
         {errorMessage}
       </div>
     ) : null;
