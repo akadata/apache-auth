@@ -15,7 +15,7 @@ export default class Login extends React.Component {
     super(props);
 
     this.state = {
-      isLoading: false
+      isLoading: true
     };
   }
 
@@ -25,6 +25,9 @@ export default class Login extends React.Component {
     request.get({
       url: '/auth-check'
     }, (err, resp) => {  // eslint-disable-line handle-callback-err
+      this.setState({
+        isLoading: false
+      });
       if (resp.statusCode === 200) {
         browserHistory.push('/status');
       }
@@ -153,7 +156,7 @@ export default class Login extends React.Component {
   }
 
   render() {
-    const {isLoginSuccess, isLoginComplete, sigRequest, duoHost} = this.state;
+    const {isLoading, isLoginSuccess, isLoginComplete, sigRequest, duoHost} = this.state;
     const redirectURL = this.parseRedirectURL();
 
     const statusAlert = (() => {
@@ -191,19 +194,19 @@ export default class Login extends React.Component {
     return (
       <Container>
         <Helmet title={'Login - auth.kevinlin.info'} />
-        <Overlay opacity={this.state.isLoading ? 0.4 : 1}>
+        <Overlay opacity={isLoading ? 0.4 : 1}>
           {statusAlert}
           <form>
             <input
               type="text"
-              className="login-field form-input sans-serif light iota"
+              className="username-field login-field form-input sans-serif light iota"
               placeholder="Username"
               onChange={this.setFormState.bind(this, 'username')}
               autoFocus
             />
             <input
               type="password"
-              className="login-field form-input sans-serif light iota"
+              className="password-field login-field form-input sans-serif light iota"
               placeholder="Password"
               onChange={this.setFormState.bind(this, 'password')}
             />
