@@ -10,7 +10,9 @@
     "build-js-watch": "mkdir -p dist && webpack --config config/webpack.js --watch --colors",
     "build-css-watch": "mkdir -p dist && sass --watch --style compressed src/client/styles/main.scss:dist/main.css",
     "start": "node index.js",
-    "lint": "eslint src test",
+    "lint": "npm run lint-js && npm run lint-scss",
+    "lint-js": "eslint src test",
+    "lint-scss": "stylelint 'src/**/*.scss' --syntax scss",
     "test": "npm run lint && node test | tap-spec",
     "cover": "istanbul cover test --print detail",
     "coveralls": "istanbul cover test --print detail && cat coverage/lcov.info | coveralls"
@@ -61,6 +63,8 @@
     "react-addons-test-utils": "^15.4.1",
     "recursive-readdir": "^2.1.0",
     "sinon": "^1.17.6",
+    "stylelint": "^7.6.0",
+    "stylelint-config-standard": "^15.0.0",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.0",
     "webpack": "^1.13.1"
