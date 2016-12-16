@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -ex
 
 cp config/secrets.js.template config/secrets.js
