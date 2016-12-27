@@ -20,6 +20,9 @@ sentryClient.patchGlobal();
 /* Templating engine */
 app.set('view engine', 'pug');
 
+/* Trust production reverse proxy */
+app.set('trust proxy', true);
+
 /* Static routes */
 app.use('/static', Express.static(path.resolve(__dirname, '../client/static')));
 app.use('/dist', Express.static(path.resolve(__dirname, '../../dist')));
