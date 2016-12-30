@@ -101,11 +101,7 @@ function initBlacklistCache() {
  */
 function initAllu() {
   const Allu = optional('allu-client');
-  if (!Allu) {
-    return null;
-  }
-
-  return new Allu('EMPTY');
+  return Allu && new Allu('EMPTY');
 }
 
 export default Context;

@@ -59,3 +59,11 @@ test('TTL expiry of blacklist entry', (t) => {
   clock.restore();
   t.end();
 });
+
+test('Allu client initialization', (t) => {
+  Context();
+
+  t.pass('Allu client can be optionally instantiated without throwing errors');
+
+  t.end();
+});

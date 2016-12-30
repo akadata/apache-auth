@@ -10,9 +10,14 @@ import range from 'range';
  */
 function create(blacklistIPs) {
   const ctx = Context();
+  ctx.allu = {
+    template: () => {}
+  };
+
   range
     .range(0, config.blacklist.maxFailedAttempts + 1)
     .forEach(() => (blacklistIPs || []).forEach((ip) => ctx.blacklist.increment(ip)));
+
   return ctx;
 }
 
