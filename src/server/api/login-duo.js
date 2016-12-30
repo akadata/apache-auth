@@ -32,10 +32,18 @@ function handler(ctx, req, res) {
       // Send a notification that a login attempt was unsuccessful
       if (ctx.allu) {
         ctx.allu.template('Auth',
-          `Failed login attempt from ${ip} with username '${req.body.username}'.`, [{
-            title: 'Track IP',
-            url: `https://freegeoip.net/?q=${ip}`
-          }]);
+          `Failed login attempt from ${ip} with username '${req.body.username}'.`, [
+            {
+              title: 'Lookup IP',
+              url: `https://freegeoip.net/?q=${ip}`
+            },
+            {
+              title: 'View logs',
+              /* eslint-disable max-len */
+              url: `https://logs.internal.kevinlin.info/app/kibana#/discover?index:%27logstash-*%27,interval:auto,query:(query_string:(analyze_wildcard:!t,query:%27_type:%22apache_access%22%20AND%20path.raw:%22%2Fhome%2Fkiwi%2Fserver%2Flogs%2Fapache%2Fkevinlin-auth-access.log%22%20AND%20clientip:%22${ip}%22%27))&_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:now-1h,mode:quick,to:now))&_a=(columns:!(_source),index:%27logstash-*%27,interval:auto,query:(query_string:(analyze_wildcard:!t,query:%27_type:%22apache_access%22%20AND%20path.raw:%22%2Fhome%2Fkiwi%2Fserver%2Flogs%2Fapache%2Fkevinlin-auth-access.log%22%20AND%20clientip:%22${ip}%22%27)),sort:!(%27@timestamp%27,desc))`
+              /* eslint-enable max-len */
+            }
+          ]);
       }
 
       res.status(401);
