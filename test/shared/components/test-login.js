@@ -22,6 +22,8 @@ test('Successful authentication check on initial mount', (t) => {
     }), 1000);
   });
 
+  // Set a redirect URL before rendering the component
+  jsdom.changeURL(global.window, 'http://localhost:18800');
   const login = mount(
     <Login />
   );
@@ -44,6 +46,42 @@ test('Successful authentication check on initial mount', (t) => {
   t.end();
 });
 
+test('Successful authentication check on initial mount with prefilled redirect URL', (t) => {
+  const clock = sinon.useFakeTimers();
+  const historyStub = sinon.stub(browserHistory, 'push');
+  const requestStub = sinon.stub(request, 'get', (opts, cb) => {
+    t.equal(opts.url, '/auth-check', 'Authentication check endpoint is correct');
+
+    // Simulate a 1000 ms network delay
+    setTimeout(() => cb(null, {
+      statusCode: 200
+    }), 1000);
+  });
+
+  // Set a redirect URL before rendering the component
+  jsdom.changeURL(global.window, 'http://localhost:18800/login?redirect=https://google.com');
+  const login = mount(
+    <Login />
+  );
+
+  t.ok(login, 'Login page is rendered');
+
+  // Request in-flight
+  t.ok(login.state().isLoading, 'Component is loading');
+  t.ok(requestStub.called, 'Request is made');
+  t.notOk(historyStub.called, 'No redirect has occurred');
+
+  // Request completed
+  clock.tick(1005);
+  t.notOk(login.state().isLoading, 'Component is no longer loading');
+  t.notOk(historyStub.calledWith('/status'), 'No redirect to status page with redirect override');
+
+  browserHistory.push.restore();
+  request.get.restore();
+  clock.restore();
+  t.end();
+});
+
 test('Unsuccessful authentication check on initial mount', (t) => {
   const clock = sinon.useFakeTimers();
   const historyStub = sinon.stub(browserHistory, 'push');
@@ -56,6 +94,8 @@ test('Unsuccessful authentication check on initial mount', (t) => {
     }), 1000);
   });
 
+  // Set a redirect URL before rendering the component
+  jsdom.changeURL(global.window, 'http://localhost:18800');
   const login = mount(
     <Login />
   );
@@ -80,6 +120,8 @@ test('Unsuccessful authentication check on initial mount', (t) => {
 
 test('Typing in text fields updates component state', (t) => {
   sinon.stub(request, 'get');
+  // Set a redirect URL before rendering the component
+  jsdom.changeURL(global.window, 'http://localhost:18800');
   const login = mount(
     <Login />
   );
@@ -126,6 +168,8 @@ test('Failure to initialize Duo 2FA', (t) => {
     setTimeout(() => cb({}), 400);
   });
 
+  // Set a redirect URL before rendering the component
+  jsdom.changeURL(global.window, 'http://localhost:18800');
   const login = mount(
     <Login />
   );
@@ -180,6 +224,8 @@ test('Incorrect username/password pair', (t) => {
     }), 400);
   });
 
+  // Set a redirect URL before rendering the component
+  jsdom.changeURL(global.window, 'http://localhost:18800');
   const login = mount(
     <Login />
   );
@@ -235,6 +281,8 @@ test('Blacklisted IP on Duo 2FA initialization', (t) => {
     }), 400);
   });
 
+  // Set a redirect URL before rendering the component
+  jsdom.changeURL(global.window, 'http://localhost:18800');
   const login = mount(
     <Login />
   );
@@ -264,6 +312,7 @@ test('Blacklisted IP on Duo 2FA initialization', (t) => {
   t.end();
 });
 
+/* eslint-disable max-statements */
 test('Successful Duo 2FA initialization', (t) => {
   const clock = sinon.useFakeTimers();
   sinon.stub(request, 'get', (opts, cb) => {
@@ -288,6 +337,8 @@ test('Successful Duo 2FA initialization', (t) => {
     }), 400);
   });
 
+  // Set a redirect URL before rendering the component
+  jsdom.changeURL(global.window, 'http://localhost:18800');
   const login = mount(
     <Login />
   );
@@ -321,6 +372,7 @@ test('Successful Duo 2FA initialization', (t) => {
   clock.restore();
   t.end();
 });
+/* eslint-enable max-statements */
 
 test('Duo response after 2FA with redirect', (t) => {
   const clock = sinon.useFakeTimers();

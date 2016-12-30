@@ -20,6 +20,8 @@ export default class Login extends React.Component {
   }
 
   componentDidMount() {
+    const redirectURL = this.parseRedirectURL(window.location.href);
+
     // First check the authentication status; it's possible the session is already authenticated,
     // in which case we can navigate away from this page.
     request.get({
@@ -28,8 +30,13 @@ export default class Login extends React.Component {
       this.setState({
         isLoading: false
       });
+
       if (resp.statusCode === 200) {
-        browserHistory.push('/status');
+        if (redirectURL) {
+          window.location.href = redirectURL;
+        } else {
+          browserHistory.push('/status');
+        }
       }
     });
   }
