@@ -1,5 +1,6 @@
 import dottie from 'dottie';
 import LRU from 'lru-cache';
+import optional from 'optional';
 
 import config from '../../config/common';
 
@@ -12,7 +13,8 @@ import config from '../../config/common';
  */
 function Context() {
   return {
-    blacklist: initBlacklistCache()
+    blacklist: initBlacklistCache(),
+    allu: initAllu()
   };
 }
 
@@ -89,6 +91,21 @@ function initBlacklistCache() {
     isBlacklisted,
     getEntries
   };
+}
+
+/**
+ * Initialize the server-side client for dispatching notifications with Allu.
+ *
+ * @returns {Object} An instantiated Allu client object, or null if the allu-client dependency
+ *                   is unable to be fulfilled.
+ */
+function initAllu() {
+  const Allu = optional('allu-client');
+  if (!Allu) {
+    return null;
+  }
+
+  return new Allu('EMPTY');
 }
 
 export default Context;

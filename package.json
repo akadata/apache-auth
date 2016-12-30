@@ -35,6 +35,7 @@
     "humanize": "0.0.9",
     "lru-cache": "^4.0.2",
     "morgan": "^1.7.0",
+    "optional": "^0.1.3",
     "pug": "^2.0.0-beta6",
     "range": "0.0.3",
     "raven": "^0.12.3",
@@ -68,5 +69,8 @@
     "tap-spec": "^4.1.1",
     "tape": "^4.6.0",
     "webpack": "^1.13.1"
+  },
+  "optionalDependencies": {
+    "allu-client": "^0.0.3"
   }
 }

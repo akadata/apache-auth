@@ -28,6 +28,16 @@ function handler(ctx, req, res) {
     if (err || (resp.statusCode !== 200)) {
       // Increment the number of times a login from this IP address has failed
       ctx.blacklist.increment(ip);
+
+      // Send a notification that a login attempt was unsuccessful
+      if (ctx.allu) {
+        ctx.allu.template('Auth',
+          `Failed login attempt from ${ip} with username '${req.body.username}'.`, [{
+            title: 'Track IP',
+            url: `https://freegeoip.net/?q=${ip}`
+          }]);
+      }
+
       res.status(401);
       return res.send({
         success: false,
