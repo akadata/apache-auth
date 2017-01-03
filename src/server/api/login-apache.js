@@ -40,9 +40,11 @@ function handler(ctx, req, res) {
     }
 
     // Replicate the Apache handler's status code
-    res.status(resp.statusCode);
+    res.status(dottie.get(resp, 'statusCode', 502));
     // Replicate the Apache handler's cookie header
-    res.set('Set-Cookie', resp.headers['set-cookie']);
+    if (dottie.get(resp, 'headers.set-cookie')) {
+      res.set('Set-Cookie', resp.headers['set-cookie']);
+    }
     res.send({});
   });
 }

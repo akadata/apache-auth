@@ -98,3 +98,35 @@ test('Response for valid 2FA response from Duo', (t) => {
   duo.verify_response.restore();
   t.end();
 });
+
+test('Response for invalid response from Apache', (t) => {
+  const authenticateStub = sinon.stub(authenticate, 'check', (username, password, cb) => {
+    cb(null);
+  });
+  const duoStub = sinon.stub(duo, 'verify_response', () => true);
+  const mockCtx = contextFactory.create();
+  const mockRes = {
+    status: sinon.spy(),
+    send: sinon.spy(),
+    set: sinon.spy()
+  };
+  const mockReq = {
+    headers: {
+      'x-forwarded-for': '127.0.0.1'
+    },
+    body: {
+      sigResponse: ''
+    }
+  };
+
+  handler(mockCtx, mockReq, mockRes);
+  t.ok(duoStub.called, 'Attempt to verify the 2FA Duo response');
+  t.ok(authenticateStub.called, 'Attempt to authenticate the user');
+  t.ok(mockRes.status.calledWith(502), 'Defaults to HTTP 502 on proxy error');
+  t.notOk(mockRes.set.called, 'No attempt to set the headers on the response');
+  t.ok(mockRes.send.calledWith({}), 'JSON response is correct');
+
+  authenticate.check.restore();
+  duo.verify_response.restore();
+  t.end();
+});
