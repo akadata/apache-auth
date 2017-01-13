@@ -14,10 +14,10 @@ function handler(ctx, req, res) {
   const ip = dottie.get(req, 'headers.x-forwarded-for') ||
     dottie.get(req, 'connection.remoteAddress');
   if (ctx.blacklist.isBlacklisted(ip)) {
-    return res.render(path.resolve(__dirname, '../../client/blacklist'));
+    return res.render(path.resolve(__dirname, '../../client/templates/blacklist'));
   }
 
-  return res.render(path.resolve(__dirname, '../../client/index'));
+  return res.render(path.resolve(__dirname, '../../client/templates/index'));
 }
 
 export default handler;

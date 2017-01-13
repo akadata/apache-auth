@@ -19,7 +19,7 @@ function handler(ctx, req, res) {
     res.status(resp.statusCode);
     // Replicate the Apache handler's cookie header
     res.set('Set-Cookie', resp.headers['set-cookie']);
-    res.send({});
+    return res.send({});
   });
 }
 

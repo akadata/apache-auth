@@ -7,15 +7,18 @@ import morgan from 'morgan';
 import path from 'path';
 import raven from 'raven';
 
+import admin from './api/admin';
 import config from '../../config/common';
 import Context from './context';
+import login from './api/login';
+import logout from './api/logout';
+import middleware from './middleware';
 import secrets from '../../config/secrets';
 
 /* Initialization */
 const app = Express();
-const ctx = Context();
-const sentryClient = new raven.Client(secrets.SENTRY_DSN);
-sentryClient.patchGlobal();
+const ctx = new Context();
+raven.config(secrets.SENTRY_DSN).install();
 
 /* Templating engine */
 app.set('view engine', 'pug');
@@ -25,25 +28,38 @@ app.set('trust proxy', true);
 
 /* Static routes */
 app.use('/static', Express.static(path.resolve(__dirname, '../client/static')));
-app.use('/dist', Express.static(path.resolve(__dirname, '../../dist')));
 
 /* Express middleware */
-app.use(raven.middleware.express.requestHandler(secrets.SENTRY_DSN));
+app.use(raven.requestHandler());
 app.use(morgan('combined'));
 app.use(cookieParser());
-app.use(bodyParser.json());
+app.use(bodyParser.json({type: '*/*'}));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(middleware.remoteIP.bind(null, ctx));
+app.use(middleware.response.bind(null, ctx));
+app.use('/api/*', middleware.blacklist.bind(null, ctx));
 
 /* API endpoints */
-app.post('/api/login-duo', require('./api/login-duo').default.bind(null, ctx));
-app.post('/api/login-apache', require('./api/login-apache').default.bind(null, ctx));
-app.post('/api/logout', require('./api/logout').default.bind(null, ctx));
-app.post('/api/blacklist-entries', require('./api/blacklist-entries').default.bind(null, ctx));
+// Login
+app.post('/api/login/apache', login.apache.bind(null, ctx));
+app.post('/api/login/duo', login.duo.bind(null, ctx));
+app.post('/api/login/otp', login.otp.bind(null, ctx));
+// Logout
+app.post('/api/logout/logout', logout.logout.bind(null, ctx));
+// Blacklist
+app.get('/api/admin/blacklist/list', admin.blacklist.list.bind(null, ctx));
+// Fingerprint
+app.put('/api/admin/fingerprint/add', admin.fingerprint.add.bind(null, ctx));
+app.post('/api/admin/fingerprint/is-valid', admin.fingerprint.isValid.bind(null, ctx));
+app.get('/api/admin/fingerprint/list', admin.fingerprint.list.bind(null, ctx));
+app.delete('/api/admin/fingerprint/revoke', admin.fingerprint.revoke.bind(null, ctx));
+// Dev mode: default to not logged in on auth status check
+app.get('/auth-check', (req, res) => res.sendStatus(403));
 
 /* View endpoints */
 app.get('*', require('./view/main').default.bind(null, ctx));
 
-app.use(raven.middleware.express.errorHandler(secrets.SENTRY_DSN));
+app.use(raven.errorHandler());
 
 const server = app.listen(process.env.PORT || config.app.port || 3000, () => {
   const port = server.address().port;

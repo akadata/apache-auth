@@ -1,8 +1,11 @@
+import Datastore from 'nedb';
 import dottie from 'dottie';
 import LRU from 'lru-cache';
 import optional from 'optional';
+import path from 'path';
 
 import config from '../../config/common';
+import secrets from '../../config/secrets';
 
 /**
  * Initialize the server-side application context, where each property is an object with functions
@@ -12,10 +15,10 @@ import config from '../../config/common';
  * @constructor
  */
 function Context() {
-  return {
-    blacklist: initBlacklistCache(),
-    allu: initAllu()
-  };
+  this.blacklist = initBlacklistCache();
+  this.allu = initAllu();
+  this.db = initDB();
+  this.yubikey = initYubikeyValidator();
 }
 
 /**
@@ -102,6 +105,35 @@ function initBlacklistCache() {
 function initAllu() {
   const Allu = optional('allu-client');
   return Allu && new Allu('EMPTY');
+}
+
+/**
+ * TODO
+ *
+ * @returns {{fingerprints}}
+ */
+function initDB() {
+  const fingerprints = new Datastore({
+    filename: path.resolve(__dirname, '../../db/fingerprints'),
+    autoload: true
+  });
+  const users = new Datastore({
+    filename: path.resolve(__dirname, '../../db/users'),
+    autoload: true
+  });
+
+  return {fingerprints, users};
+}
+
+/**
+ * TODO
+ *
+ * @returns {*}
+ */
+function initYubikeyValidator() {
+  const YubikeyValidator = optional('yubikey-validator');
+  return YubikeyValidator && new YubikeyValidator(secrets.YUBIKEY_AES_KEY, secrets.YUBIKEY_UID,
+    secrets.YUBIKEY_API_CLIENT_ID, secrets.YUBIKEY_API_SECRET_KEY);
 }
 
 export default Context;

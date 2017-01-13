@@ -1,4 +1,4 @@
-import config from '../../../config/common';
+import config from '../../../../../config/common';
 
 /**
  * Retrieve all server-side known blacklist entries.
