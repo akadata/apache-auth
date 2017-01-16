@@ -1,8 +1,8 @@
 @import '../../universal/colors';
 
 .alert {
-  padding: 15px 15px;
   background-color: $light-blue;
+  padding: 15px;
 
   &.alert-success {
     background-color: $light-green;

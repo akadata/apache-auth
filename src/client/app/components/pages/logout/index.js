@@ -15,8 +15,8 @@ export default class Logout extends React.Component {
   }
 
   componentDidMount() {
-    request.get({
-      url: '/api/logout'
+    request.post({
+      url: '/api/logout/logout'
     }, (err, resp) => {  // eslint-disable-line handle-callback-err
       this.setState({status: resp.statusCode});
     });

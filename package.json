@@ -14,7 +14,7 @@
     "lint": "npm run lint-js && npm run lint-scss",
     "lint-js": "eslint src test",
     "lint-scss": "stylelint 'src/**/*.scss' --syntax scss",
-    "test": "npm run lint && node test | tap-spec",
+    "test": "node test | tap-spec",
     "cover": "istanbul cover test --print detail",
     "coveralls": "istanbul cover test --print detail && cat coverage/lcov.info | coveralls"
   },

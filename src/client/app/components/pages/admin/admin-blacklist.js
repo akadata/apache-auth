@@ -2,6 +2,7 @@ import humanize from 'humanize';
 import React from 'react';
 import request from 'browser-request';
 
+import Alert, {ALERT_TYPE_ERROR} from '../../ui/alert';
 import Table from '../../ui/table';
 
 import browser from '../../../util/browser';
@@ -42,9 +43,12 @@ export default class AdminBlacklist extends React.Component {
     const {errorMessage} = this.state;
 
     return errorMessage ? (
-      <div className="blacklist-error alert alert-error sans-serif light iota text-red">
-        {errorMessage}
-      </div>
+      <Alert
+        type={ALERT_TYPE_ERROR}
+        className="margin--bottom"
+        title="There was an error loading details."
+        message={errorMessage}
+      />
     ) : null;
   }
 
@@ -57,7 +61,7 @@ export default class AdminBlacklist extends React.Component {
         <p className="sans-serif semibold iota text-gray-70 margin-tiny--bottom">BLACKLIST ENTRIES</p>
         <Table
           className="admin-table sans-serif kilo text-gray-70"
-          headerClassName="sans-serif semibold"
+          headerClassName="sans-serif semibold kilo"
           header={[
             'IP',
             'ATTEMPTS',

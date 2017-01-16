@@ -53,8 +53,6 @@ app.get('/api/admin/blacklist/list', admin.blacklist.list.bind(null, ctx));
 app.put('/api/admin/fingerprint/add', admin.fingerprint.add.bind(null, ctx));
 app.get('/api/admin/fingerprint/list', admin.fingerprint.list.bind(null, ctx));
 app.delete('/api/admin/fingerprint/revoke', admin.fingerprint.revoke.bind(null, ctx));
-// Dev mode: default to not logged in on auth status check
-app.get('/auth-check', (req, res) => res.sendStatus(403));
 
 /* View endpoints */
 app.get('*', require('./view/main').default.bind(null, ctx));

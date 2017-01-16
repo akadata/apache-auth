@@ -1,7 +1,7 @@
 @import 'colors';
 
 a {
-  transition: all .1s ease-out;
+  transition: all 0.1s ease-out;
 }
 
 a:link,
@@ -12,5 +12,5 @@ a:active {
 }
 
 a:hover {
-  opacity: .7;
+  opacity: 0.7;
 }

@@ -2,33 +2,11 @@
 @import 'fonts';
 @import 'spacing';
 
-.text--page-title {
-  font-family: montserrat-semibold, sans-serif;
-  color: $gray-70;
-  font-size: $delta;
-  margin-bottom: $spacing-large;
-}
-
-.text--section-header {
-  font-family: montserrat-semibold, sans-serif;
-  color: $gray-70;
-  font-size: $gamma;
-  margin-bottom: $spacing-small;
-  text-transform: uppercase;
-}
-
-.text--section-caption {
-  font-family: montserrat-regular, sans-serif;
-  color: $gray-50;
-  font-size: $iota;
-  margin-bottom: $spacing-default;
-}
-
 .text--field-header {
-  font-family: montserrat-regular, sans-serif;
-  letter-spacing: 0.08em;
   color: $gray-50;
+  font-family: montserrat-regular, sans-serif;
   font-size: $kilo;
+  letter-spacing: 0.08em;
   margin-bottom: $spacing-tiny;
   text-transform: uppercase;
 }

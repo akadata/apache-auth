@@ -11,10 +11,5 @@ body {
 }
 
 .transition {
-  transition: all .15s ease-out;
-}
-
-.fade {
-  opacity: .6;
-  pointer-events: none;
+  transition: all 0.15s ease-out;
 }
