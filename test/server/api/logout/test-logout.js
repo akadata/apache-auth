@@ -31,7 +31,8 @@ test('Logout replicates remote status code and cookie header', (t) => {
   handler(null, mockReq, mockRes);
   t.ok(requestStub.called, 'Network request is made');
   t.ok(mockRes.status.calledWith(200), 'Apache status code is replicated to client');
-  t.ok(mockRes.set.calledWith('Set-Cookie', 'resp-cookie'), 'Apache cookie is replicated to client');
+  t.ok(mockRes.set.calledWith('Set-Cookie', 'resp-cookie'),
+    'Apache cookie is replicated to client');
   t.ok(mockRes.send.calledWith({}), 'JSON response is correct');
 
   request.post.restore();
