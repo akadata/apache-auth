@@ -29,7 +29,7 @@ function handler(ctx, req, res) {
   }
 
   // Validate that the browser fingerprint is trusted
-  return ctx.db.fingerprints.find({fingerprint: req.body.fingerprint}, onFingerprintValidation);
+  return ctx.db.fingerprints.find({fingerprint: data.fingerprint}, onFingerprintValidation);
 
   function onFingerprintValidation(err, docs) {
     if (err || !docs.length) {
@@ -37,7 +37,11 @@ function handler(ctx, req, res) {
     }
 
     // Validate the OTP and grab the decrypted Yubikey metadata
-    return ctx.yubikey.validate(req.body.otp, onYubikeyValidation);
+    try {
+      return ctx.yubikey.validate(data.otp, onYubikeyValidation);
+    } catch (e) {
+      return res.error(401, 'The provided Yubikey OTP is invalid.');
+    }
   }
 
   function onYubikeyValidation(err, decrypted) {

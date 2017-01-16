@@ -107,6 +107,7 @@ class OTP extends React.Component {
           <form>
             <div className="margin-large--bottom">
               <p className="text--field-header">OTP</p>
+              <input type="password" style={{display: 'none'}} />
               <TextField
                 ref={(elem) => {
                   this.otpInput = elem;
