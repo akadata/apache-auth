@@ -2,7 +2,7 @@ import duo from 'duo_web';
 import sinon from 'sinon';
 import test from 'tape';
 
-import authenticate from '../../../src/server/api/authenticate';
+import authenticate from '../../../src/server/util/authenticate';
 import contextFactory from '../../util/context-factory';
 import handler from '../../../src/server/api/login-duo';
 import secrets from '../../../config/secrets';

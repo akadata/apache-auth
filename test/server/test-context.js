@@ -5,10 +5,11 @@ import config from '../../config/common';
 import Context from '../../src/server/context';
 
 test('Blacklist cache functions', (t) => {
+  sinon.stub(Context.prototype, 'initDB');
   const maxFailedAttempts = config.blacklist.maxFailedAttempts;
   config.blacklist.maxFailedAttempts = 2;
   const clock = sinon.useFakeTimers(1000);
-  const ctx = Context();
+  const ctx = new Context();
   const ip = '127.0.0.1';
 
   t.ok(ctx.blacklist, 'Blacklist functions');
@@ -34,16 +35,18 @@ test('Blacklist cache functions', (t) => {
 
   config.blacklist.maxFailedAttempts = maxFailedAttempts;
   clock.restore();
+  Context.prototype.initDB.restore();
   t.end();
 });
 
 test('TTL expiry of blacklist entry', (t) => {
+  sinon.stub(Context.prototype, 'initDB');
   const ttl = config.blacklist.TTL;
   const maxFailedAttempts = config.blacklist.maxFailedAttempts;
   config.blacklist.TTL = 5;
   config.blacklist.maxFailedAttempts = 2;
   const clock = sinon.useFakeTimers(1000);
-  const ctx = Context();
+  const ctx = new Context();
   const ip = '127.0.0.1';
 
   ctx.blacklist.increment(ip);
@@ -57,13 +60,17 @@ test('TTL expiry of blacklist entry', (t) => {
   config.blacklist.maxFailedAttempts = maxFailedAttempts;
   config.blacklist.TTL = ttl;
   clock.restore();
+  Context.prototype.initDB.restore();
   t.end();
 });
 
-test('Allu client initialization', (t) => {
-  Context();
+test('Allu and Yubikey client initialization', (t) => {
+  sinon.stub(Context.prototype, 'initDB');
+
+  new Context();  // eslint-disable-line no-new
 
   t.pass('Allu client can be optionally instantiated without throwing errors');
+  t.pass('Yubikey client can be optionally instantiated without throwing errors');
 
   t.end();
 });

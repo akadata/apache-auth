@@ -9,7 +9,12 @@ import range from 'range';
  * @returns {Object} Initialized context object.
  */
 function create(blacklistIPs) {
-  const ctx = Context();
+  const ctx = {
+    blacklist: Context.prototype.initBlacklistCache(),
+    db: {},
+    yubikey: Context.prototype.initYubikeyValidator()
+  };
+
   ctx.allu = {
     template: () => {}
   };

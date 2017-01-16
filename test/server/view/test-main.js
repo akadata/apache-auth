@@ -18,7 +18,7 @@ test('Blacklisted IP is served separate template', (t) => {
   handler(mockCtx, mockReq, mockRes);
 
   const template = mockRes.render.getCalls()[0].args[0];
-  t.ok(template.endsWith('client/blacklist'), 'Blacklist template is rendered');
+  t.ok(template.endsWith('templates/blacklist'), 'Blacklist template is rendered');
 
   t.end();
 });
@@ -37,7 +37,7 @@ test('Non-blacklisted IP is served regular template', (t) => {
   handler(mockCtx, mockReq, mockRes);
 
   const template = mockRes.render.getCalls()[0].args[0];
-  t.ok(template.endsWith('client/index'), 'Regular template is rendered');
+  t.ok(template.endsWith('templates/index'), 'Regular template is rendered');
 
   t.end();
 });

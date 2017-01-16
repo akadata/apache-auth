@@ -2,7 +2,7 @@ import request from 'request';
 import sinon from 'sinon';
 import test from 'tape';
 
-import handler from '../../../src/server/api/logout';
+import handler from '../../../../src/server/api/logout/logout';
 
 test('Logout replicates remote status code and cookie header', (t) => {
   const requestStub = sinon.stub(request, 'post', (opts, cb) => {

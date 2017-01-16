@@ -2,7 +2,7 @@ import request from 'request';
 import sinon from 'sinon';
 import test from 'tape';
 
-import authenticate from '../../../src/server/api/authenticate';
+import authenticate from '../../../src/server/util/authenticate';
 
 test('Authentication request of correct shape', (t) => {
   const requestStub = sinon.stub(request, 'post', (opts, cb) => {

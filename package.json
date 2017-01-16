@@ -15,6 +15,7 @@
     "lint-js": "eslint src test",
     "lint-scss": "stylelint 'src/**/*.scss' --syntax scss",
     "test": "node test | tap-spec",
+    "test-watch": "nodemon test | tap-spec",
     "cover": "istanbul cover test --print detail",
     "coveralls": "istanbul cover test --print detail && cat coverage/lcov.info | coveralls"
   },
