@@ -20,15 +20,19 @@ function handler(ctx, req, res) {
   }, req.body);
 
   if (!data.sigResponse) {
-    return res.error(400, 'The 2FA validation from Duo was not supplied. Please try the login again.');
+    return res.error(400,
+      'The 2FA validation from Duo was not supplied. Please try the login again.');
   }
 
   if (!data.username || !data.password) {
-    return res.error(400, 'The username and password was not supplied. Please try the login again.');
+    return res.error(400,
+      'The username and password was not supplied. Please try the login again.');
   }
 
   // Verify the 2FA response from Duo
-  if (!duo.verify_response(secrets.DUO_IKEY, secrets.DUO_SKEY, secrets.DUO_AKEY, req.body.sigResponse)) {
+  const isDuoValid = duo.verify_response(secrets.DUO_IKEY, secrets.DUO_SKEY, secrets.DUO_AKEY,
+    data.sigResponse);
+  if (!isDuoValid) {
     return res.error(401, 'The Duo 2FA response could not be validated.');
   }
 

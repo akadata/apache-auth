@@ -58,7 +58,9 @@ export default class AdminBlacklist extends React.Component {
     return (
       <div className="margin-large--bottom">
         {this.renderFailureAlert()}
-        <p className="sans-serif semibold iota text-gray-70 margin-tiny--bottom">BLACKLIST ENTRIES</p>
+        <p className="sans-serif semibold iota text-gray-70 margin-tiny--bottom">
+          BLACKLIST ENTRIES
+        </p>
         <Table
           className="admin-table sans-serif kilo text-gray-70"
           headerClassName="sans-serif semibold kilo"
@@ -68,13 +70,13 @@ export default class AdminBlacklist extends React.Component {
             'EXPIRY'
           ]}
           entries={blacklistEntries.map((entry) => [
-            <span className={`blacklist-entry ${entry.isBlacklisted ? 'alert-error text-red' : 'text-gray-70'}`}>
+            <span className={`blacklist-entry ${entry.isBlacklisted && 'text-red'}`}>
               {entry.ip}
             </span>,
-            <span className={`blacklist-entry ${entry.isBlacklisted ? 'alert-error text-red' : 'text-gray-70'}`}>
+            <span className={`blacklist-entry ${entry.isBlacklisted && 'text-red'}`}>
               {entry.count}
             </span>,
-            <span className={`blacklist-entry ${entry.isBlacklisted ? 'alert-error text-red' : 'text-gray-70'}`}>
+            <span className={`blacklist-entry ${entry.isBlacklisted && 'text-red'}`}>
               {humanize.relativeTime(entry.expiry)}
             </span>
           ])}
