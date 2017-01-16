@@ -13,7 +13,7 @@ import TextField from '../../ui/text-field';
 
 import browser from '../../../util/browser';
 
-class OTP extends React.Component {
+export class OTP extends React.Component {
   constructor(props) {
     super(props);
 
@@ -87,7 +87,7 @@ class OTP extends React.Component {
             isLoginComplete && redirectURL && (
               <Alert
                 type={ALERT_TYPE_SUCCESS}
-                className="margin--bottom"
+                className="login-success-alert margin--bottom"
                 title="Login success!"
                 message={`Redirecting you to ${redirectURL}...`}
               />
@@ -97,7 +97,7 @@ class OTP extends React.Component {
             loginStatus.message && (
               <Alert
                 type={ALERT_TYPE_ERROR}
-                className="margin--bottom"
+                className="login-error-alert margin--bottom"
                 title="There was an error logging you in."
                 message={loginStatus.message}
               />
@@ -120,7 +120,7 @@ class OTP extends React.Component {
 
             <Button
               text="Login"
-              className="sans-serif semibold iota"
+              className="login-submit-btn sans-serif semibold iota"
               onClick={this.handleSubmitLogin.bind(this)}
               disabled={isLoading}
             />

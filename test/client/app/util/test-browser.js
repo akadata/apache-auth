@@ -1,3 +1,5 @@
+/* global window */
+
 import {browserHistory} from 'react-router';
 import jsdom from 'jsdom';
 import sinon from 'sinon';
