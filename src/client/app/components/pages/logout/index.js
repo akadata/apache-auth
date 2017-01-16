@@ -26,6 +26,7 @@ export default class Logout extends React.Component {
     return (
       <Alert
         type={ALERT_TYPE_SUCCESS}
+        className="logout-success-alert"
         title="You have been logged out."
         message={
           <span>
@@ -40,6 +41,7 @@ export default class Logout extends React.Component {
     return (
       <Alert
         type={ALERT_TYPE_ERROR}
+        className="logout-error-alert"
         title="There was an error logging you out."
         message="Please try again."
       />
