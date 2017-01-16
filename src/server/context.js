@@ -15,10 +15,10 @@ import secrets from '../../config/secrets';
  * @constructor
  */
 function Context() {
-  this.blacklist = initBlacklistCache();
-  this.allu = initAllu();
-  this.db = initDB();
-  this.yubikey = initYubikeyValidator();
+  this.blacklist = this.initBlacklistCache();
+  this.allu = this.initAllu();
+  this.db = this.initDB();
+  this.yubikey = this.initYubikeyValidator();
 }
 
 /**
@@ -26,7 +26,7 @@ function Context() {
  *
  * @returns {Object} Object containing functions to modify the blacklist cache.
  */
-function initBlacklistCache() {
+Context.prototype.initBlacklistCache = function initBlacklistCache() {
   const cache = LRU({
     maxAge: config.blacklist.TTL
   });
@@ -94,7 +94,7 @@ function initBlacklistCache() {
     isBlacklisted,
     getEntries
   };
-}
+};
 
 /**
  * Initialize the server-side client for dispatching notifications with Allu.
@@ -102,17 +102,17 @@ function initBlacklistCache() {
  * @returns {Object} An instantiated Allu client object, or null if the allu-client dependency
  *                   is unable to be fulfilled.
  */
-function initAllu() {
+Context.prototype.initAllu = function initAllu() {
   const Allu = optional('allu-client');
   return Allu && new Allu('EMPTY');
-}
+};
 
 /**
  * TODO
  *
  * @returns {{fingerprints}}
  */
-function initDB() {
+Context.prototype.initDB = function initDB() {
   const fingerprints = new Datastore({
     filename: path.resolve(__dirname, '../../db/fingerprints'),
     autoload: true
@@ -123,17 +123,17 @@ function initDB() {
   });
 
   return {fingerprints, users};
-}
+};
 
 /**
  * TODO
  *
  * @returns {*}
  */
-function initYubikeyValidator() {
+Context.prototype.initYubikeyValidator = function initYubikeyValidator() {
   const YubikeyValidator = optional('yubikey-validator');
   return YubikeyValidator && new YubikeyValidator(secrets.YUBIKEY_AES_KEY, secrets.YUBIKEY_UID,
     secrets.YUBIKEY_API_CLIENT_ID, secrets.YUBIKEY_API_SECRET_KEY);
-}
+};
 
 export default Context;
