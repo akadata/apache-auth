@@ -1,51 +1,93 @@
+$spacing-default: 24px;
+$spacing-tiny: 6px;
+$spacing-small: 12px;
+$spacing-large: 36px;
+$spacing-huge: 50px;
+
+/* Top margin */
+
 .margin--top {
-  margin-top: 24px !important;
+  margin-top: $spacing-default !important;
+}
+
+.margin-huge--top {
+  margin-top: $spacing-huge !important;
 }
 
 .margin-large--top {
-  margin-top: 36px !important;
+  margin-top: $spacing-large !important;
 }
 
-.margin-tiny--bottom {
-  margin-bottom: 6px !important;
+.margin-small--top {
+  margin-top: $spacing-small !important;
 }
 
-.margin-small--bottom {
-  margin-bottom: 12px !important;
+.margin-tiny--top {
+  margin-top: $spacing-tiny !important;
 }
+
+/* Bottom margin */
 
 .margin--bottom {
-  margin-bottom: 24px !important;
+  margin-bottom: $spacing-default !important;
+}
+
+.margin-huge--bottom {
+  margin-bottom: $spacing-huge !important;
 }
 
 .margin-large--bottom {
-  margin-bottom: 36px !important;
+  margin-bottom: $spacing-large !important;
 }
 
-.margin-tiny--right {
-  margin-right: 6px !important;
+.margin-small--bottom {
+  margin-bottom: $spacing-small !important;
 }
 
-.margin-small--right {
-  margin-right: 12px !important;
+.margin-tiny--bottom {
+  margin-bottom: $spacing-tiny !important;
 }
+
+/* Right margin */
 
 .margin--right {
-  margin-right: 24px !important;
+  margin-right: $spacing-default !important;
+}
+
+.margin-huge--right {
+  margin-right: $spacing-huge !important;
 }
 
 .margin-large--right {
-  margin-right: 36px !important;
+  margin-right: $spacing-large !important;
 }
+
+.margin-small--right {
+  margin-right: $spacing-small !important;
+}
+
+.margin-tiny--right {
+  margin-right: $spacing-tiny !important;
+}
+
+/* Left margin */
 
 .margin--left {
-  margin-left: 24px !important;
+  margin-left: $spacing-default !important;
 }
 
-.margin--none {
-  margin: 0 !important;
+.margin-huge--left {
+  margin-left: $spacing-huge !important;
 }
 
-.pad--all {
-  padding: 24px !important;
+.margin-large--left {
+  margin-left: $spacing-large !important;
+}
+
+.margin-small--left {
+  margin-left: $spacing-small !important;
+}
+
+.margin-tiny--left {
+  margin-left: $spacing-tiny !important;
 }

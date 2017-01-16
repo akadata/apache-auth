@@ -17,7 +17,7 @@ module.exports = {
     blacklist: path.resolve(__dirname, '../src/client/scripts/blacklist.js')
   },
   output: {
-    path: path.resolve(__dirname, '../dist'),
+    path: path.resolve(__dirname, '../src/client/static/dist'),
     filename: '[name].js'
   },
   module: {

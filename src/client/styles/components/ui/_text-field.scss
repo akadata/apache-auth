@@ -1,0 +1,45 @@
+@import '../../universal/colors';
+
+.text-field-container {
+  position: relative;
+  opacity: 0.7;
+}
+
+.text-field-container:hover {
+  opacity: 0.9;
+}
+
+.text-field-container:focus {
+  opacity: 1;
+}
+
+.text-field {
+  border: none;
+  border-bottom: 1px solid $primary-light;
+  padding: 3px 1px;
+  color: $gray-70;
+  width: 100%;
+}
+
+.text-field:hover {
+  border-bottom: 1px solid $primary;
+}
+
+.text-field:focus {
+  border-bottom: 2px solid $primary;
+}
+
+.text-field::selection {
+  background: $primary-light;
+}
+
+.text-field::-moz-selection {
+  background: $primary-light;
+}
+
+.text-field-icon {
+  position: absolute;
+  left: 0;
+  color: $gray-70;
+  opacity: 0.5;
+}

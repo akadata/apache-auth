@@ -7,5 +7,14 @@
 }
 
 body {
-  background-color: $gray-10;
+  background-color: $gray-90;
+}
+
+.transition {
+  transition: all .15s ease-out;
+}
+
+.fade {
+  opacity: .6;
+  pointer-events: none;
 }

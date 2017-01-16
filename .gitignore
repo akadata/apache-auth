@@ -1,15 +1,18 @@
 # IDE
-.idea
+.idea/
 *.iml
 
 # Project artifacts
-dist*
+src/client/static/dist/
 node_modules/
 .sass-cache/
 npm-debug.log
 
 # Test artifacts
 coverage/
+
+# Database
+db/
 
 # Secrets
 config/secrets.js

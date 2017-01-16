@@ -1,0 +1,18 @@
+@import '../universal/colors';
+
+$shadow-black: rgba(0, 0, 0, 0.1);
+
+.container-box {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: 400px;
+  padding: 50px 40px;
+
+  .logo {
+    cursor: pointer;
+    margin: auto;
+    width: 180px;
+  }
+}

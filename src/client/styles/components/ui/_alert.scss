@@ -1,0 +1,18 @@
+@import '../../universal/colors';
+
+.alert {
+  padding: 15px 15px;
+  background-color: $light-blue;
+
+  &.alert-success {
+    background-color: $light-green;
+  }
+
+  &.alert-warn {
+    background-color: $light-yellow;
+  }
+
+  &.alert-error {
+    background-color: $light-red;
+  }
+}

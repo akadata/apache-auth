@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Overlay = ({opacity, children}) => (
+const Overlay = ({isLoading, children}) => (
   <div className="overlay-container" style={{
-    opacity: opacity,
+    opacity: isLoading ? 0.4 : 1,
     transition: 'all 0.3s ease'
   }}>
     {children}

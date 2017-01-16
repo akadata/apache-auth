@@ -1,9 +1,17 @@
-@import 'universal/general';
-@import 'universal/spacing';
+@import 'universal/alignment';
 @import 'universal/colors';
 @import 'universal/fonts';
-@import 'universal/alignment';
-@import 'container';
-@import 'duo';
-@import 'login';
-@import 'status';
+@import 'universal/general';
+@import 'universal/spacing';
+@import 'universal/text';
+
+@import 'components/container';
+@import 'components/duo';
+@import 'components/ui/alert';
+@import 'components/ui/button';
+@import 'components/ui/table';
+@import 'components/ui/text-field';
+
+@import 'pages/admin';
+@import 'pages/login';
+@import 'pages/status';

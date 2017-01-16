@@ -7,11 +7,24 @@ $gray-50: #808080;
 $gray-30: #b3b3b3;
 $gray-20: #ccc;
 $gray-10: #e6e6e6;
+$gray-5: #f2f2f2;
 $white: #fff;
 
+$light-green: #e8f5e9;
 $green: #388e3c;
+$light-red: #ffebee;
 $red: #d32f2f;
-$blue: #03a9f4;
+$light-blue: #d6ecf5;
+$blue: #3eb8f0;
+$dark-blue: #036996;
+$light-orange: #e69f97;
+$orange: #e74c3c;
+$yellow: #b49b5c;
+$light-yellow: #fcf8e3;
+$transparent: rgba(0, 0, 0, 0.4);
+
+$primary: $blue;
+$primary-light: $light-blue;
 
 .bg-black {
   background-color: $black !important;
@@ -39,6 +52,10 @@ $blue: #03a9f4;
 
 .bg-gray-10 {
   background-color: $gray-10 !important;
+}
+
+.bg-gray-5 {
+  background-color: $gray-5 !important;
 }
 
 .bg-white {
@@ -91,12 +108,56 @@ $blue: #03a9f4;
 
 .text-green {
   color: $green !important;
+
+  a {
+    color: $green;
+  }
+
+  a:hover {
+    border-bottom: 2px solid $green;
+  }
 }
 
 .text-red {
   color: $red !important;
+
+  a {
+    color: $red;
+  }
+
+  a:hover {
+    border-bottom: 2px solid $red;
+  }
 }
 
 .text-blue {
   color: $blue !important;
+
+  a {
+    color: $blue;
+  }
+
+  a:hover {
+    border-bottom: 2px solid $blue;
+  }
+}
+
+.text-yellow {
+  color: $yellow !important;
+
+  a {
+    color: $yellow;
+  }
+
+  a:hover {
+    border-bottom: 2px solid $yellow;
+  }
+}
+
+.text-dark-blue {
+  color: $dark-blue !important;
+}
+
+.text-orange {
+  color: $orange !important;
 }
