@@ -184,7 +184,11 @@ test('Valid browser fingerprint, valid Yubikey, valid user lookup, Apache authen
     t.equal(username, 'username', 'Username is passed from DB to request');
     t.equal(password, 'password', 'Password is passed from DB to request');
 
-    return cb();
+    return cb(null, {
+      headers: {
+        'set-cookie': 'cookie'
+      }
+    });
   });
   const mockCtx = {
     yubikey: {
@@ -217,7 +221,8 @@ test('Valid browser fingerprint, valid Yubikey, valid user lookup, Apache authen
   const mockRes = {
     error: sinon.spy(),
     status: sinon.spy(),
-    send: sinon.spy()
+    send: sinon.spy(),
+    set: sinon.spy()
   };
 
   handler(mockCtx, mockReq, mockRes);
@@ -226,6 +231,7 @@ test('Valid browser fingerprint, valid Yubikey, valid user lookup, Apache authen
   t.notOk(mockRes.error.called, 'No error is set');
   t.ok(mockRes.status.calledWith(502), 'Default status code 502 is set');
   t.ok(mockRes.send.calledWith({}), 'Empty JSON response');
+  t.ok(mockRes.set.calledWith('Set-Cookie', 'cookie'), 'Cookie is proxied from Apache');
 
   authenticate.check.restore();
   t.end();
