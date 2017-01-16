@@ -3,8 +3,6 @@
 import jsdom from 'jsdom';
 import sinon from 'sinon';
 
-const noop = () => {};
-
 function setupDom() {
   if (typeof document !== 'undefined') {
     return;
@@ -14,9 +12,6 @@ function setupDom() {
   global.window = document.defaultView;
   global.navigator = window.navigator;
   global.XMLHttpRequest = sinon.useFakeXMLHttpRequest();
-  global.Duo = {
-    init: noop
-  };
 }
 
 setupDom();
