@@ -1,1 +1,3 @@
-import './test-template';
+import './app';
+import './scripts';
+import './templates';

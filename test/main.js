@@ -3,5 +3,4 @@ import './browser';
 
 /* Main tests */
 import './server';
-// import './client';
-// import './shared';
+import './client';
