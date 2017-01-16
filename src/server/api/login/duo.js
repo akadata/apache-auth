@@ -48,12 +48,8 @@ function handler(ctx, req, res) {
     }
 
     // Then, initialize a Duo 2FA transaction
-    const sigRequest = duo.sign_request(
-      secrets.DUO_IKEY,
-      secrets.DUO_SKEY,
-      secrets.DUO_AKEY,
-      data.username
-    );
+    const sigRequest = duo.sign_request(secrets.DUO_IKEY, secrets.DUO_SKEY, secrets.DUO_AKEY,
+      data.username);
 
     return res.success({
       sigRequest,
