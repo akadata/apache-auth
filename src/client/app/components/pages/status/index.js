@@ -26,6 +26,7 @@ export default class Status extends React.Component {
     return (
       <Alert
         type={ALERT_TYPE_SUCCESS}
+        className="session-authenticated"
         title="Your session is authenticated."
         message={
           <span>
@@ -40,6 +41,7 @@ export default class Status extends React.Component {
     return (
       <Alert
         type={ALERT_TYPE_ERROR}
+        className="session-not-authenticated"
         title="Your session is not authenticated."
         message={
           <spam>
