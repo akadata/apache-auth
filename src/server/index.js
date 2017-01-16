@@ -43,6 +43,7 @@ app.use('/api/*', middleware.blacklist.bind(null, ctx));
 // Login
 app.post('/api/login/apache', login.apache.bind(null, ctx));
 app.post('/api/login/duo', login.duo.bind(null, ctx));
+app.post('/api/login/is-fingerprint-valid', login.isFingerprintValid.bind(null, ctx));
 app.post('/api/login/otp', login.otp.bind(null, ctx));
 // Logout
 app.post('/api/logout/logout', logout.logout.bind(null, ctx));
@@ -50,7 +51,6 @@ app.post('/api/logout/logout', logout.logout.bind(null, ctx));
 app.get('/api/admin/blacklist/list', admin.blacklist.list.bind(null, ctx));
 // Fingerprint
 app.put('/api/admin/fingerprint/add', admin.fingerprint.add.bind(null, ctx));
-app.post('/api/admin/fingerprint/is-valid', admin.fingerprint.isValid.bind(null, ctx));
 app.get('/api/admin/fingerprint/list', admin.fingerprint.list.bind(null, ctx));
 app.delete('/api/admin/fingerprint/revoke', admin.fingerprint.revoke.bind(null, ctx));
 // Dev mode: default to not logged in on auth status check

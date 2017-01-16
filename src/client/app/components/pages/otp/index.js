@@ -50,7 +50,7 @@ class OTP extends React.Component {
             otp: this.otpInput.getValue(),
             fingerprint
           }
-        }, (err, resp, loginStatus) => {
+        }, (err, resp, loginStatus) => {  // eslint-disable-line handle-callback-err
           if (resp.statusCode === 200) {
             this.setState({isLoginComplete: true});
             if (redirectURL) {

@@ -42,9 +42,9 @@ class Login extends React.Component {
 
     new Fingerprint().get((fingerprint) => {
       request.post({
-        url: '/api/admin/fingerprint/is-valid',
+        url: '/api/login/is-fingerprint-valid',
         json: {fingerprint}
-      }, (err, resp) => {
+      }, (err, resp) => {  // eslint-disable-line handle-callback-err
         if (resp.statusCode === 200 && !browser.parseURL().query.force) {
           browserHistory.push({
             pathname: '/otp',
@@ -63,7 +63,7 @@ class Login extends React.Component {
           username: this.usernameInput.getValue(),
           password: this.passwordInput.getValue()
         }
-      }, (err, resp, loginStatus) => {
+      }, (err, resp, loginStatus) => {  // eslint-disable-line handle-callback-err
         this.setState({loginStatus});
         return done();
       });
@@ -81,7 +81,7 @@ class Login extends React.Component {
           password: this.passwordInput.getValue(),
           sigResponse
         }
-      }, (err, resp, loginStatus) => {
+      }, (err, resp, loginStatus) => {  // eslint-disable-line handle-callback-err
         if (resp.statusCode === 200) {
           this.setState({isLoginComplete: true});
           if (redirectURL) {

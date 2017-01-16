@@ -1,2 +1,2 @@
-src/client/static/scripts
+src/client/static/dist
 config/secrets.js
