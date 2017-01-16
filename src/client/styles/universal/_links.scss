@@ -1,0 +1,16 @@
+@import 'colors';
+
+a {
+  transition: all .1s ease-out;
+}
+
+a:link,
+a:visited,
+a:active {
+  opacity: 1;
+  text-decoration: none;
+}
+
+a:hover {
+  opacity: .7;
+}

@@ -1,4 +1,6 @@
+import {browserHistory} from 'react-router';
 import Duo from 'react-duo-web';
+import Fingerprint from 'fingerprintjs2';
 import Helmet from 'react-helmet';
 import LoadingHOC from 'react-loading-hoc';
 import React from 'react';
@@ -35,6 +37,20 @@ class Login extends React.Component {
           }
         }
         return done();
+      });
+    });
+
+    new Fingerprint().get((fingerprint) => {
+      request.post({
+        url: '/api/admin/fingerprint/is-valid',
+        json: {fingerprint}
+      }, (err, resp) => {
+        if (resp.statusCode === 200 && !browser.parseURL().query.force) {
+          browserHistory.push({
+            pathname: '/otp',
+            query: browser.parseURL().query
+          });
+        }
       });
     });
   }
