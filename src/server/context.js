@@ -108,9 +108,10 @@ Context.prototype.initAllu = function initAllu() {
 };
 
 /**
- * TODO
+ * Initialize the server-side, on-disk datastore.
  *
- * @returns {{fingerprints}}
+ * @returns {Object} Object containing properties fingerprints and users, each a different
+ *                   datastore.
  */
 Context.prototype.initDB = function initDB() {
   const fingerprints = new Datastore({
@@ -126,9 +127,9 @@ Context.prototype.initDB = function initDB() {
 };
 
 /**
- * TODO
+ * Initialize the Yubikey validator client.
  *
- * @returns {*}
+ * @returns {Object} Yubikey validation client.
  */
 Context.prototype.initYubikeyValidator = function initYubikeyValidator() {
   const YubikeyValidator = optional('yubikey-validator');
