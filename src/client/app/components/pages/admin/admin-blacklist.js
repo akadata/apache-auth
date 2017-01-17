@@ -45,7 +45,7 @@ export default class AdminBlacklist extends React.Component {
     return errorMessage ? (
       <Alert
         type={ALERT_TYPE_ERROR}
-        className="margin--bottom"
+        className="admin-error-alert margin--bottom"
         title="There was an error loading details."
         message={errorMessage}
       />

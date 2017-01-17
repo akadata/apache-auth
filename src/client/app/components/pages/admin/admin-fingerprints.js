@@ -63,7 +63,7 @@ export default class AdminFingerprints extends React.Component {
     const {errorMessage} = this.state;
 
     return errorMessage ? (
-      <div className="blacklist-error alert alert-error sans-serif light iota text-red">
+      <div className="fingerprints-error-alert alert alert-error sans-serif light iota text-red">
         {errorMessage}
       </div>
     ) : null;
