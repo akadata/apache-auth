@@ -15,7 +15,7 @@ import TextField from '../../ui/text-field';
 
 import browser from '../../../util/browser';
 
-class Login extends React.Component {
+export class Login extends React.Component {
   constructor(props) {
     super(props);
 
@@ -165,9 +165,9 @@ class Login extends React.Component {
 
             <Button
               text="Login"
-              className="sans-serif semibold iota"
+              className="login-submit-btn sans-serif semibold iota"
               onClick={this.handleSubmitLogin.bind(this)}
-              disabled={isLoading || loginStatus.sigRequest}
+              disabled={isLoading || Boolean(loginStatus.sigRequest)}
             />
           </form>
 
