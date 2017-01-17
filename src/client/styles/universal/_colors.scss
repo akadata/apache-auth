@@ -4,6 +4,7 @@ $gray-80: #333;
 $gray-70: #4d4d4d;
 $gray-60: #666;
 $gray-50: #808080;
+$gray-40: #999;
 $gray-30: #b3b3b3;
 $gray-20: #ccc;
 $gray-10: #e6e6e6;
@@ -88,6 +89,10 @@ $primary-light: $light-blue;
 
 .text-gray-50 {
   color: $gray-50 !important;
+}
+
+.text-gray-40 {
+  color: $gray-40 !important;
 }
 
 .text-gray-30 {

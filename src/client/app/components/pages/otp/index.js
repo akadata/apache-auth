@@ -1,5 +1,7 @@
 import Fingerprint from 'fingerprintjs2';
+import extend from 'deep-extend';
 import Helmet from 'react-helmet';
+import {Link} from 'react-router';
 import LoadingHOC from 'react-loading-hoc';
 import React from 'react';
 import request from 'browser-request';
@@ -80,7 +82,7 @@ export class OTP extends React.Component {
     const redirectURL = browser.parseURL().query.redirect;
 
     return (
-      <Container>
+      <Container style={{paddingBottom: '24px'}}>
         <Helmet title={'OTP - auth.kevinlin.info'} />
         <Overlay isLoading={isLoading}>
           {
@@ -124,6 +126,18 @@ export class OTP extends React.Component {
               onClick={this.handleSubmitLogin.bind(this)}
               disabled={isLoading}
             />
+
+            <div className="text-center margin--top">
+              <Link
+                className="sans-serif text-gray-40 lambda"
+                to={{
+                  pathname: '/login',
+                  query: extend(browser.parseURL().query, {force: true})
+                }}
+              >
+                DUO 2FA LOGIN
+              </Link>
+            </div>
           </form>
         </Overlay>
       </Container>
