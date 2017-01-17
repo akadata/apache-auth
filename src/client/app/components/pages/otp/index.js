@@ -5,11 +5,12 @@ import {Link} from 'react-router';
 import LoadingHOC from 'react-loading-hoc';
 import React from 'react';
 import request from 'browser-request';
+import url from 'url';
 
 import Container from '../../layout/container';
 import Overlay from '../../layout/overlay';
 
-import Alert, {ALERT_TYPE_SUCCESS, ALERT_TYPE_ERROR} from '../../ui/alert';
+import Alert, {ALERT_TYPE_SUCCESS, ALERT_TYPE_WARN, ALERT_TYPE_ERROR} from '../../ui/alert';
 import Button from '../../ui/button';
 import TextField from '../../ui/text-field';
 
@@ -80,11 +81,23 @@ export class OTP extends React.Component {
     const {loginStatus, isLoginComplete} = this.state;
 
     const redirectURL = browser.parseURL().query.redirect;
+    const redirectURLParsed = redirectURL && url.parse(redirectURL);
 
     return (
       <Container style={{paddingBottom: '24px'}}>
         <Helmet title={'OTP - auth.kevinlin.info'} />
         <Overlay isLoading={isLoading}>
+          {
+            !isLoginComplete && redirectURL && (
+              <Alert
+                type={ALERT_TYPE_WARN}
+                className="margin--bottom"
+                title="Your session must be authenticated."
+                message={`Please login to access ${redirectURLParsed.host}.`}
+              />
+            )
+          }
+
           {
             isLoginComplete && redirectURL && (
               <Alert
@@ -95,6 +108,7 @@ export class OTP extends React.Component {
               />
             )
           }
+
           {
             loginStatus.message && (
               <Alert
