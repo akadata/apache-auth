@@ -49,8 +49,7 @@
     "react-helmet": "^3.1.0",
     "react-loading-hoc": "0.0.2",
     "react-router": "^2.6.1",
-    "request": "^2.79.0",
-    "yubikey-validator": "0.0.3"
+    "request": "^2.79.0"
   },
   "devDependencies": {
     "babel": "^6.5.2",
@@ -80,6 +79,7 @@
     "webpack": "^1.13.1"
   },
   "optionalDependencies": {
-    "allu-client": "^0.0.3"
+    "allu-client": "^0.0.3",
+    "yubikey-validator": "^0.0.3"
   }
 }
