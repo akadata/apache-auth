@@ -11,7 +11,7 @@ const commonConfig = {
   app: {
     name: 'apache-auth',
     title: 'auth.kevinlin.info',
-    url: 'https://rp.internal.kevinlin.info',
+    url: 'https://auth.kevinlin.info',
     port: 18800
   },
   blacklist: {
