@@ -15,7 +15,7 @@ test('Missing name or fingerprint on fingerprint add', (t) => {
 
   handler(mockCtx, mockReq, mockRes);
 
-  t.ok(mockRes.error.calledWith(400, 'You must specify both the name and fingerprint.'),
+  t.ok(mockRes.error.calledWith(400, 'You must specify the name, fingerprint, and username.'),
     'Error message about missing name or fingerprint');
 
   t.end();
@@ -28,7 +28,8 @@ test('Successful addition of fingerprint', (t) => {
         insert: (data, cb) => {
           t.deepEqual(data, {
             name: 'name',
-            fingerprint: 'fingerprint'
+            fingerprint: 'fingerprint',
+            username: 'username'
           }, 'Document inserted into DB is correct');
 
           return cb();
@@ -39,7 +40,8 @@ test('Successful addition of fingerprint', (t) => {
   const mockReq = {
     body: {
       name: 'name',
-      fingerprint: 'fingerprint'
+      fingerprint: 'fingerprint',
+      username: 'username'
     }
   };
   const mockRes = {

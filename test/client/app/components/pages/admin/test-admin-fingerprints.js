@@ -62,7 +62,8 @@ test('Adding a new trusted browser fingerprint', (t) => {
     t.equal(opts.url, '/api/admin/fingerprint/add', 'Endpoint is correct');
     t.deepEqual(opts.json, {
       name: 'name',
-      fingerprint: 'fingerprint'
+      fingerprint: 'fingerprint',
+      username: null
     }, 'JSON body is correct');
 
     return cb(null, {statusCode: 200});

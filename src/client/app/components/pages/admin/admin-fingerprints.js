@@ -32,7 +32,7 @@ export default class AdminFingerprints extends React.Component {
 
       this.setState({
         fingerprints: json.fingerprints,
-        username: resp.getResponseHeader('X-Kiwi-User')
+        username: resp.getResponseHeader && resp.getResponseHeader('X-Kiwi-User')
       });
       return done();
     }));
