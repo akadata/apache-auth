@@ -5,6 +5,7 @@
     "stage-0"
   ],
   "plugins": [
-    "rewire"
+    "rewire",
+    "css-modules-transform"
   ]
 }

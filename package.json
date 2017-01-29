@@ -27,6 +27,7 @@
   "license": "MIT",
   "dependencies": {
     "babel-core": "^6.11.4",
+    "babel-plugin-css-modules-transform": "^1.1.0",
     "body-parser": "^1.15.2",
     "browser-request": "^0.3.3",
     "cookie-parser": "^1.4.3",
