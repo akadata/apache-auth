@@ -1,6 +1,5 @@
 import Check from 'react-icons/lib/md/check';
 import Error from 'react-icons/lib/md/error';
-import Fingerprint from 'fingerprintjs2';
 import extend from 'deep-extend';
 import Helmet from 'react-helmet';
 import {Link} from 'react-router';
@@ -14,8 +13,6 @@ import Container from '../../layout/container';
 import Overlay from '../../layout/overlay';
 
 import Alert, {ALERT_TYPE_SUCCESS, ALERT_TYPE_WARN, ALERT_TYPE_ERROR} from '../../ui/alert';
-import Button from '../../ui/button';
-import TextField from '../../ui/text-field';
 
 import browser from '../../../util/browser';
 import authStatus from '../../../util/auth-status';
@@ -37,39 +34,61 @@ export class U2F extends React.Component {
   }
 
   componentDidMount() {
-    // TODO uncomment for prod
-    // authStatus.redirectIfAuthenticated(this.props.loading);
+    authStatus.redirectIfAuthenticated(this.props.loading);
 
     this.requestAuthChallenge();
   }
 
   requestAuthChallenge() {
-    const redirectURL = browser.parseURL().query.redirect;
-
-    new Fingerprint().get((fingerprint) => {
+    browser.fingerprint((fingerprint) => {
       request.post({
         url: '/api/login/u2f/challenge',
         json: {fingerprint}
-      }, (challengeErr, challengeResp, {appId, challenge, version, keyHandle}) => {
-        this.setState({u2fStatus: STATUS_WAITING});
-
-        window.u2f.sign(appId, challenge, [{version, keyHandle}], (authResponse) => {
-          this.setState({u2fStatus: STATUS_VERIFYING});
-
-          request.post({
-            url: '/api/login/u2f/verify',
-            json: {fingerprint, authResponse}
-          }, (verifyErr, verifyResp, loginStatus) => {
-            this.setState({
-              u2fStatus: loginStatus.success ? STATUS_DONE : STATUS_ERROR,
-              loginStatus
-            });
-
-            return redirectURL ? browser.go(redirectURL) : browser.push('/status');
-          });
-        });
-      });
+      }, this.onAuthChallenge.bind(this));
     });
+  }
+
+  onAuthChallenge(err, resp, loginStatus = {}) {
+    if (err || resp.statusCode !== 200) {
+      return this.setState({
+        u2fStatus: STATUS_ERROR,
+        loginStatus
+      });
+    }
+
+    this.setState({u2fStatus: STATUS_WAITING});
+
+    const {appId, challenge, version, keyHandle} = loginStatus;
+    return browser.u2f.sign(appId, challenge, [{version, keyHandle}], this.onU2FSign.bind(this));
+  }
+
+  onU2FSign(authResponse) {
+    this.setState({u2fStatus: STATUS_VERIFYING});
+
+    browser.fingerprint((fingerprint) => {
+      request.post({
+        url: '/api/login/u2f/verify',
+        json: {fingerprint, authResponse}
+      }, this.onU2FVerify.bind(this));
+    });
+  }
+
+  onU2FVerify(err, resp, loginStatus = {}) {
+    if (err || resp.statusCode !== 200) {
+      return this.setState({
+        u2fStatus: STATUS_ERROR,
+        loginStatus
+      });
+    }
+
+    const redirectURL = browser.parseURL().query.redirect;
+
+    this.setState({
+      u2fStatus: loginStatus.success ? STATUS_DONE : STATUS_ERROR,
+      loginStatus
+    });
+
+    return loginStatus.success && (redirectURL ? browser.go(redirectURL) : browser.push('/status'));
   }
 
   render() {

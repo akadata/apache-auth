@@ -52,7 +52,8 @@
     "react-router": "^2.6.1",
     "react-spinkit": "^2.0.0",
     "request": "^2.79.0",
-    "u2f": "^0.1.2"
+    "u2f": "^0.1.2",
+    "u2f-api-polyfill": "^0.4.3"
   },
   "devDependencies": {
     "babel": "^6.5.2",

@@ -1,7 +1,11 @@
 /* global window */
 
 import {browserHistory} from 'react-router';
+import Fingerprint from 'fingerprintjs2';
 import url from 'url';
+
+// Polyfill window.u2f, if not already available
+import 'u2f-api-polyfill';
 
 /**
  * Load the specified URL after a delay.
@@ -53,13 +57,22 @@ function parseURL() {
   return url.parse(window.location.href, true);
 }
 
-function u2f() {
-  // TODO
+/**
+ * TODO
+ *
+ * @param cb
+ */
+function fingerprint(cb) {
+  new Fingerprint().get(cb);
 }
+
+const u2f = window.u2f;
 
 export default {
   go,
   push,
   clearTimeout,
-  parseURL
+  parseURL,
+  fingerprint,
+  u2f
 };

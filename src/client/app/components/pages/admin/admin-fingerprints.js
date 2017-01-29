@@ -11,7 +11,8 @@ export default class AdminFingerprints extends React.Component {
     super(props);
 
     this.state = {
-      fingerprints: []
+      fingerprints: [],
+      username: null
     };
   }
 
@@ -29,7 +30,10 @@ export default class AdminFingerprints extends React.Component {
         return done();
       }
 
-      this.setState({fingerprints: json.fingerprints});
+      this.setState({
+        fingerprints: json.fingerprints,
+        username: resp.getResponseHeader('X-Kiwi-User')
+      });
       return done();
     }));
   }
@@ -54,7 +58,7 @@ export default class AdminFingerprints extends React.Component {
         json: {
           name: this.browserName.getValue(),
           fingerprint,
-          username: 'kiwi'  // TODO
+          username: this.state.username
         }
       }, this.loadBrowserFingerprints.bind(this));
     });
@@ -81,7 +85,7 @@ export default class AdminFingerprints extends React.Component {
             BROWSER FINGERPRINTS
           </p>
           <p className="sans-serif light kilo text-gray-70">
-            Only OTP authentication requests from these trusted browsers will be allowed.
+            Only OTP/U2F authentication requests from these trusted browsers will be allowed.
           </p>
         </div>
 
