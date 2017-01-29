@@ -1,0 +1,16 @@
+.u2f-progress {
+  display: table;
+  margin: auto;
+
+  .u2f-icon {
+    float: left;
+    height: 25px;
+    width: 25px;
+  }
+
+  .u2f-status-text {
+    height: 25px;
+    display: table-cell;
+    vertical-align: middle;
+  }
+}

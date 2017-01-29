@@ -13,7 +13,7 @@ const Logo = (props) => {
           width: 15,
           display: 'inline-block'
         }} />
-        <div className="sans-serif semibold gamma text-gray-70" style={{
+        <div className="sans-serif semibold epsilon text-gray-70" style={{
           marginLeft: 25,
           display: 'inline-block'
         }}>

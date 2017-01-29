@@ -53,6 +53,10 @@ function parseURL() {
   return url.parse(window.location.href, true);
 }
 
+function u2f() {
+  // TODO
+}
+
 export default {
   go,
   push,

@@ -10,11 +10,12 @@ import extend from 'deep-extend';
 function handler(ctx, req, res) {
   const data = extend({
     name: '',
-    fingerprint: ''
+    fingerprint: '',
+    username: ''
   }, req.body);
 
-  if (!data.name || !data.fingerprint) {
-    return res.error(400, 'You must specify both the name and fingerprint.');
+  if (!data.name || !data.fingerprint || !data.username) {
+    return res.error(400, 'You must specify the name, fingerprint, and username.');
   }
 
   return ctx.db.fingerprints.insert(data, (err) => err ? res.error() : res.success());

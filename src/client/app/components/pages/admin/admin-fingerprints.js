@@ -53,7 +53,8 @@ export default class AdminFingerprints extends React.Component {
         url: '/api/admin/fingerprint/add',
         json: {
           name: this.browserName.getValue(),
-          fingerprint
+          fingerprint,
+          username: 'kiwi'  // TODO
         }
       }, this.loadBrowserFingerprints.bind(this));
     });

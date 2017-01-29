@@ -18,7 +18,7 @@ import secrets from '../../config/secrets';
 /* Initialization */
 const app = Express();
 const ctx = new Context();
-raven.config(secrets.SENTRY_DSN).install();
+// raven.config(secrets.SENTRY_DSN).install();
 
 /* Templating engine */
 app.set('view engine', 'pug');
@@ -45,6 +45,8 @@ app.post('/api/login/apache', login.apache.bind(null, ctx));
 app.post('/api/login/duo', login.duo.bind(null, ctx));
 app.post('/api/login/is-fingerprint-valid', login.isFingerprintValid.bind(null, ctx));
 app.post('/api/login/otp', login.otp.bind(null, ctx));
+app.post('/api/login/u2f/challenge', login.u2f.challenge.bind(null, ctx));
+app.post('/api/login/u2f/verify', login.u2f.verify.bind(null, ctx));
 // Logout
 app.post('/api/logout/logout', logout.logout.bind(null, ctx));
 // Blacklist
@@ -53,6 +55,9 @@ app.get('/api/admin/blacklist/list', admin.blacklist.list.bind(null, ctx));
 app.put('/api/admin/fingerprint/add', admin.fingerprint.add.bind(null, ctx));
 app.get('/api/admin/fingerprint/list', admin.fingerprint.list.bind(null, ctx));
 app.delete('/api/admin/fingerprint/revoke', admin.fingerprint.revoke.bind(null, ctx));
+// U2F registration
+app.post('/api/admin/u2f/register-challenge', admin.u2f.registerChallenge.bind(null, ctx));
+app.post('/api/admin/u2f/register-verify', admin.u2f.registerVerify.bind(null, ctx));
 
 /* View endpoints */
 app.get('*', require('./view/main').default.bind(null, ctx));
