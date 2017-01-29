@@ -58,14 +58,17 @@ function parseURL() {
 }
 
 /**
- * TODO
+ * Get the user's browser fingerprint.
  *
- * @param cb
+ * @param {Function} cb Callback called with a single parameter, the browser fingerprint string.
  */
 function fingerprint(cb) {
   new Fingerprint().get(cb);
 }
 
+/**
+ * The client-side U2F object.
+ */
 const u2f = window.u2f;
 
 export default {

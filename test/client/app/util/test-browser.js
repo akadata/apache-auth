@@ -1,6 +1,7 @@
 /* global window */
 
 import {browserHistory} from 'react-router';
+import Fingerprint from 'fingerprintjs2';
 import jsdom from 'jsdom';
 import sinon from 'sinon';
 import test from 'tape';
@@ -54,4 +55,15 @@ test('browser.parseURL parses current URL with query string', (t) => {
   t.equal(parsed.query.redirect, 'https://google.com', 'Query string redirect is parsed');
 
   t.end();
+});
+
+test('browser.fingerprint calls into Fingerprint', (t) => {
+  sinon.stub(Fingerprint.prototype, 'get', (cb) => cb('fingerprint'));
+
+  browser.fingerprint((fingerprint) => {
+    t.equal(fingerprint, 'fingerprint', 'Fingerprint is produced in callback');
+
+    Fingerprint.prototype.get.restore();
+    t.end();
+  });
 });
