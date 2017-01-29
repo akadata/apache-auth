@@ -112,7 +112,7 @@ test('Redirect to OTP for authenticated browser', (t) => {
   t.ok(requestGetStub.called, 'Auth check on initial component mount');
   t.ok(requestPostStub.called, 'Fingerprint check on initial component mount');
   t.ok(browserStub.calledWith({
-    pathname: '/otp',
+    pathname: '/u2f',
     query: {
       redirect: 'https://google.com'
     }

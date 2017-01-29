@@ -48,7 +48,7 @@ export class Login extends React.Component {
       }, (err, resp) => {  // eslint-disable-line handle-callback-err
         if (resp.statusCode === 200 && !browser.parseURL().query.force) {
           browserHistory.push({
-            pathname: '/otp',
+            pathname: '/u2f',
             query: browser.parseURL().query
           });
         }

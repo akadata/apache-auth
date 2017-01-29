@@ -3,6 +3,13 @@ import u2f from 'u2f';
 
 import config from '../../../../../config/common';
 
+/**
+ * Issue a challenge for a request to authenticate for a user identified by a browser fingerprint.
+ *
+ * @param {Object} ctx Server-side application context
+ * @param {Object} req Express request object
+ * @param {Object} res Express response object
+ */
 function handler(ctx, req, res) {
   const data = extend({
     fingerprint: ''
@@ -24,6 +31,10 @@ function handler(ctx, req, res) {
 
   function onUserLookup(err, user) {
     if (err || !user) {
+      return res.error(404, 'The fingerprint\'s associated username does not exist.');
+    }
+
+    if (!user.keyHandle) {
       return res.error(404, 'The associated user has no security key registered.');
     }
 

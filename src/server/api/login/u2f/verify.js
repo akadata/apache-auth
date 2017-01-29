@@ -4,6 +4,14 @@ import u2f from 'u2f';
 
 import authenticate from '../../../util/authenticate';
 
+/**
+ * Validate the client-side provided authentication challenge response, and request an HTTP session
+ * cookie (proxied to the client) on success.
+ *
+ * @param {Object} ctx Server-side application context
+ * @param {Object} req Express request object
+ * @param {Object} res Express response object
+ */
 function handler(ctx, req, res) {
   const data = extend({
     authResponse: null,
@@ -11,7 +19,7 @@ function handler(ctx, req, res) {
   }, req.body);
 
   if (!data.fingerprint) {
-    return res.error(400, 'Client fingerprint must be supplied.');
+    return res.error(400, 'Browser fingerprint must be supplied.');
   }
 
   if (!data.authResponse) {
@@ -32,7 +40,11 @@ function handler(ctx, req, res) {
 
   function onUserLookup(err, user, fingerprint) {
     if (err || !user) {
-      return res.error(404, 'The associated user has no associated security key.');
+      return res.error(404, 'The associated username does not exist.');
+    }
+
+    if (!user.publicKey) {
+      return res.error(404, 'The associated user has no associated public key.');
     }
 
     const authResult = u2f.checkSignature(fingerprint.authRequest, data.authResponse,
