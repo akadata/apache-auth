@@ -56,6 +56,7 @@ app.put('/api/admin/fingerprint/add', admin.fingerprint.add.bind(null, ctx));
 app.get('/api/admin/fingerprint/list', admin.fingerprint.list.bind(null, ctx));
 app.delete('/api/admin/fingerprint/revoke', admin.fingerprint.revoke.bind(null, ctx));
 // U2F registration
+app.post('/api/admin/u2f/list', admin.u2f.list.bind(null, ctx));
 app.post('/api/admin/u2f/register-challenge', admin.u2f.registerChallenge.bind(null, ctx));
 app.post('/api/admin/u2f/register-verify', admin.u2f.registerVerify.bind(null, ctx));
 
