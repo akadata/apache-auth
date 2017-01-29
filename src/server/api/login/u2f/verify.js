@@ -18,25 +18,32 @@ function handler(ctx, req, res) {
     return res.error(400, 'Auth response must be supplied.');
   }
 
-  return ctx.db.fingerprints.findOne({fingerprint: data.fingerprint}, (fingerprintErr, {username, authRequest}) => {
-    if (fingerprintErr || !authRequest) {
-      return res.error(404, 'No authentication request with the specified fingerprint is in progress.');
+  return ctx.db.fingerprints.findOne({fingerprint: data.fingerprint}, onFingerprintLookup);
+
+  function onFingerprintLookup(err, doc) {
+    if (err || !doc) {
+      return res.error(404, 'No authentication request with the specified fingerprint is in ' +
+        'progress.');
     }
 
-    return ctx.db.users.findOne({username}, (userErr, {username, password, publicKey}) => {
-      if (userErr || !publicKey) {
-        return res.error(404, 'The associated user has no associated security key.');
-      }
+    return ctx.db.users.findOne({username: doc.username},
+      (userErr, user) => onUserLookup(userErr, user, doc));
+  }
 
-      const authResult = u2f.checkSignature(authRequest, data.authResponse, publicKey);
+  function onUserLookup(err, user, fingerprint) {
+    if (err || !user) {
+      return res.error(404, 'The associated user has no associated security key.');
+    }
 
-      if (!authResult.successful) {
-        return res.error(500, 'There was an error validating the authentication token.', authResult);
-      }
+    const authResult = u2f.checkSignature(fingerprint.authRequest, data.authResponse,
+      user.publicKey);
 
-      return authenticate.check(username, password, onApacheAuthentication);
-    });
-  });
+    if (!authResult.successful) {
+      return res.error(500, 'There was an error validating the authentication token.', authResult);
+    }
+
+    return authenticate.check(user.username, user.password, onApacheAuthentication);
+  }
 
   function onApacheAuthentication(err, resp) {  // eslint-disable-line handle-callback-err
     // Replicate the Apache handler's status code
