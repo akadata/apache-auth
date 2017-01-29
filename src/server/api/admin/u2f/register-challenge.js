@@ -4,7 +4,7 @@ import u2f from 'u2f';
 import config from '../../../../../config/common';
 
 /**
- * TODO
+ * Issue a challenge for a request to register a new security key.
  *
  * @param {Object} ctx Server-side application context
  * @param {Object} req Express request object
@@ -25,8 +25,6 @@ function handler(ctx, req, res) {
     }
 
     const registerRequest = u2f.request(config.app.url);
-
-    console.log(registerRequest);
 
     return ctx.db.users.update({username: data.username}, extend(doc, {registerRequest}),
       () => res.success(registerRequest));

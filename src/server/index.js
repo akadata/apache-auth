@@ -18,7 +18,7 @@ import secrets from '../../config/secrets';
 /* Initialization */
 const app = Express();
 const ctx = new Context();
-// raven.config(secrets.SENTRY_DSN).install();
+raven.config(secrets.SENTRY_DSN).install();
 
 /* Templating engine */
 app.set('view engine', 'pug');

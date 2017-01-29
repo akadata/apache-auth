@@ -1,6 +1,14 @@
 import extend from 'deep-extend';
 import u2f from 'u2f';
 
+/**
+ * Validate the client-side provided challenge response, and add the user's security key to the
+ * database as appropriate.
+ *
+ * @param {Object} ctx Server-side application context
+ * @param {Object} req Express request object
+ * @param {Object} res Express response object
+ */
 function handler(ctx, req, res) {
   const data = extend({
     username: '',
@@ -19,9 +27,6 @@ function handler(ctx, req, res) {
     if (err || !doc) {
       return res.error(404, 'Specified username does not exist in the users database.');
     }
-
-    console.log(doc.registerRequest);
-    console.log(data.registerResponse);
 
     const result = u2f.checkRegistration(doc.registerRequest, data.registerResponse);
 
