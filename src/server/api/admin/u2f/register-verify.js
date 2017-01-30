@@ -34,10 +34,10 @@ function handler(ctx, req, res) {
       return ctx.db.users.update({username: data.username}, extend(doc, {
         keyHandle: result.keyHandle,
         publicKey: result.publicKey
-      }), () => res.success({publicKey: result.publicKey}));
+      }), () => res.success());
     }
 
-    return res.error(400, result.errorMessage || 'There was an unknown error.');
+    return res.error(401, result.errorMessage || 'There was an unknown error.');
   });
 }
 
