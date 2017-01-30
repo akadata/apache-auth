@@ -21,12 +21,12 @@ export default class AdminU2F extends React.Component {
   }
 
   loadSecurityKeyUsers() {
-    request.post({
+    request.get({
       url: '/api/admin/u2f/list',
       json: {}
     }, (err, resp, json) => {  // eslint-disable-line handle-callback-err
       this.setState({
-        username: resp.getResponseHeader('X-Kiwi-User'),
+        username: resp.getResponseHeader && resp.getResponseHeader('X-Kiwi-User'),
         users: json.users
       });
     });
@@ -84,7 +84,7 @@ export default class AdminU2F extends React.Component {
 
         <div className="margin--bottom">
           <Button
-            className="trust-browser-btn sans-serif btn-outline iota"
+            className="register-u2f-btn sans-serif btn-outline iota"
             onClick={this.handleRegisterKeyClick.bind(this)}
             text="Register Security Key"
           />
