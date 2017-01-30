@@ -69,7 +69,10 @@ function fingerprint(cb) {
 /**
  * The client-side U2F object.
  */
-const u2f = window.u2f;
+const u2f = window.u2f || {
+  register() {},
+  sign() {}
+};
 
 export default {
   go,
