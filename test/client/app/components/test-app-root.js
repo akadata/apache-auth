@@ -12,7 +12,7 @@ test('App root wraps children elements', (t) => {
   );
 
   t.equal(app.find('.app-root').length, 1, 'Container is present');
-  t.equal(app.find('.app-root').props().children, 'children', 'Children are wrapped in container');
+  t.equal(app.find('Favicon').length, 1, 'App-wide favicon is present');
 
   t.end();
 });

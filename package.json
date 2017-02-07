@@ -50,6 +50,7 @@
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
     "react-duo-web": "0.0.1",
+    "react-favicon": "^0.0.5",
     "react-helmet": "^3.1.0",
     "react-icons": "^2.2.3",
     "react-loading-hoc": "0.0.2",
