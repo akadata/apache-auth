@@ -1,6 +1,13 @@
 {
   "extends": "stylelint-config-standard",
+  "plugins": [
+    "stylelint-order"
+  ],
   "rules": {
-    "declaration-block-properties-order": "alphabetical"
+    "order/declaration-block-order": [
+      "custom-properties",
+      "declarations"
+    ],
+    "order/declaration-block-properties-alphabetical-order": true
   }
 }
