@@ -25,6 +25,10 @@
   },
   "author": "Kevin Lin <developer@kevinlin.info>",
   "license": "MIT",
+  "pre-commit": [
+    "lint",
+    "test"
+  ],
   "dependencies": {
     "babel-core": "^6.11.4",
     "body-parser": "^1.15.2",
@@ -74,6 +78,7 @@
     "istanbul": "^1.1.0-alpha.1",
     "jsdom": "^9.8.3",
     "nodemon": "^1.11.0",
+    "pre-commit": "^1.2.2",
     "pug-cli": "^1.0.0-alpha6",
     "react-addons-test-utils": "^15.4.1",
     "recursive-readdir": "^2.1.0",
