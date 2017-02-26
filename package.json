@@ -11,6 +11,7 @@
     "build-css-watch": "mkdir -p src/client/static/dist && sass --watch --style compressed src/client/styles/main.scss:src/client/static/dist/main.css",
     "start": "node index.js",
     "start-watch": "nodemon index.js",
+    "dev": "concurrently --kill-others --prefix name --prefix-colors cyan.bold,yellow.bold,magenta.bold --names HTTP,JS,CSS 'npm run start-watch' 'npm run build-js-watch' 'npm run build-css-watch'",
     "lint": "npm run lint-js && npm run lint-scss",
     "lint-js": "eslint src test",
     "lint-scss": "stylelint 'src/**/*.scss' --syntax scss",
@@ -30,9 +31,11 @@
     "test"
   ],
   "dependencies": {
+    "allu-client": "^0.0.3",
     "babel-core": "^6.11.4",
     "body-parser": "^1.15.2",
     "browser-request": "^0.3.3",
+    "cookie": "^0.3.1",
     "cookie-parser": "^1.4.3",
     "deep-extend": "^0.4.1",
     "dottie": "^1.1.1",
@@ -70,6 +73,7 @@
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.5.0",
+    "concurrently": "^3.3.0",
     "coveralls": "^2.11.15",
     "css-loader": "^0.26.1",
     "enzyme": "^2.6.0",
@@ -93,7 +97,6 @@
     "webpack": "^1.13.1"
   },
   "optionalDependencies": {
-    "allu-client": "^0.0.3",
     "yubikey-validator": "^0.0.3"
   }
 }

@@ -1,3 +1,4 @@
+import './authorize';
 import './u2f';
 
 import './test-apache';

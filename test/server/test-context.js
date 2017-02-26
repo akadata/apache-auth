@@ -5,7 +5,7 @@ import test from 'tape';
 import config from '../../config/common';
 import Context from '../../src/server/context';
 
-test('Blacklist cache functions', (t) => {
+test('Blacklist cache functions', (t) => {  // eslint-disable-line max-statements
   sinon.stub(Context.prototype, 'initDB');
   const maxFailedAttempts = config.blacklist.maxFailedAttempts;
   config.blacklist.maxFailedAttempts = 2;
@@ -33,6 +33,8 @@ test('Blacklist cache functions', (t) => {
   ctx.blacklist.remove(ip);
   t.deepEqual(ctx.blacklist.getEntries(), {}, 'Element is removed from blacklist');
   t.notOk(ctx.blacklist.isBlacklisted(ip), 'IP is not blacklisted after removal');
+  ctx.blacklist.add(ip);
+  t.ok(ctx.blacklist.isBlacklisted(ip), 'IP is blacklisted after manual addition');
 
   config.blacklist.maxFailedAttempts = maxFailedAttempts;
   clock.restore();

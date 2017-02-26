@@ -41,6 +41,8 @@ app.use('/api/*', middleware.blacklist.bind(null, ctx));
 
 /* API endpoints */
 // Login
+app.post('/api/login/authorize/check', login.authorize.check.bind(null, ctx));
+app.post('/api/login/authorize/request', login.authorize.request.bind(null, ctx));
 app.post('/api/login/apache', login.apache.bind(null, ctx));
 app.post('/api/login/duo', login.duo.bind(null, ctx));
 app.post('/api/login/is-fingerprint-valid', login.isFingerprintValid.bind(null, ctx));
@@ -49,6 +51,10 @@ app.post('/api/login/u2f/challenge', login.u2f.challenge.bind(null, ctx));
 app.post('/api/login/u2f/verify', login.u2f.verify.bind(null, ctx));
 // Logout
 app.post('/api/logout/logout', logout.logout.bind(null, ctx));
+// Authorizations
+app.post('/api/admin/authorize/grant', admin.authorize.grant.bind(null, ctx));
+app.post('/api/admin/authorize/reject', admin.authorize.reject.bind(null, ctx));
+app.post('/api/admin/authorize/details', admin.authorize.details.bind(null, ctx));
 // Blacklist
 app.get('/api/admin/blacklist/list', admin.blacklist.list.bind(null, ctx));
 // Fingerprint

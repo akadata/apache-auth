@@ -1,8 +1,10 @@
+import Allu from 'allu-client';
 import Datastore from 'nedb';
 import dottie from 'dottie';
 import LRU from 'lru-cache';
 import optional from 'optional';
 import path from 'path';
+import range from 'range';
 
 import config from '../../config/common';
 import secrets from '../../config/secrets';
@@ -48,6 +50,15 @@ Context.prototype.initBlacklistCache = function initBlacklistCache() {
   }
 
   /**
+   * Add a new entry to the blacklist.
+   *
+   * @param {String} ip Client IP address
+   */
+  function add(ip) {
+    range.range(config.blacklist.maxFailedAttempts).forEach(increment.bind(null, ip));
+  }
+
+  /**
    * Remove the specified IP address from the blacklist cache.
    *
    * @param {String} ip Client IP address
@@ -90,6 +101,7 @@ Context.prototype.initBlacklistCache = function initBlacklistCache() {
 
   return {
     increment,
+    add,
     remove,
     isBlacklisted,
     getEntries
@@ -99,12 +111,10 @@ Context.prototype.initBlacklistCache = function initBlacklistCache() {
 /**
  * Initialize the server-side client for dispatching notifications with Allu.
  *
- * @returns {Object} An instantiated Allu client object, or null if the allu-client dependency
- *                   is unable to be fulfilled.
+ * @returns {Object} An instantiated Allu client object.
  */
 Context.prototype.initAllu = function initAllu() {
-  const Allu = optional('allu-client');
-  return Allu && new Allu('EMPTY');
+  return new Allu('EMPTY');
 };
 
 /**
@@ -114,16 +124,16 @@ Context.prototype.initAllu = function initAllu() {
  *                   datastore.
  */
 Context.prototype.initDB = function initDB() {
-  const fingerprints = new Datastore({
-    filename: path.resolve(__dirname, '../../db/fingerprints'),
-    autoload: true
-  });
-  const users = new Datastore({
-    filename: path.resolve(__dirname, '../../db/users'),
+  const createDatastore = (name) => new Datastore({
+    filename: path.resolve(__dirname, `../../db/${name}`),
     autoload: true
   });
 
-  return {fingerprints, users};
+  const authorizations = createDatastore('authorizations');
+  const fingerprints = createDatastore('fingerprints');
+  const users = createDatastore('users');
+
+  return {authorizations, fingerprints, users};
 };
 
 /**
