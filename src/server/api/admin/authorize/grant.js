@@ -1,4 +1,3 @@
-import cookie from 'cookie';
 import dottie from 'dottie';
 import extend from 'deep-extend';
 
@@ -46,7 +45,8 @@ function handler(ctx, req, res) {
       return res.error(400, 'This request is past expiry, and cannot be approved.');
     }
 
-    return authenticate.check(user.username, user.password, onAuthCheck.bind(null, authorization));
+    return authenticate.authRequest(user.username, user.password, data.duration,
+      onAuthCheck.bind(null, authorization));
   }
 
   function onAuthCheck(authorization, err, resp) {
@@ -54,22 +54,12 @@ function handler(ctx, req, res) {
       return res.error(500, 'There was an upstream error from the authentication server.');
     }
 
-    // Modify the cookie returned by Apache by scoping it to a more specific domain and limiting
-    // its (client-side) TTL.
-    const sessionName = 'kiwi-session';
-    const cookieParsed = cookie.parse(dottie.get(resp, 'headers.set-cookie', '')[0]);
-    const cookieSerialized = cookie.serialize(sessionName, cookieParsed[sessionName], {
-      domain: authorization.scope,
-      path: '/',
-      expires: new Date(Date.now() + data.duration * 60 * 1000),
-      httpOnly: true,
-      secure: true
-    });
+    const cookie = dottie.get(resp, 'headers.set-cookie', [''])[0];
 
     return ctx.db.authorizations.update({
       _id: data.authorizationID
     }, {
-      $set: {cookie: cookieSerialized}
+      $set: {cookie}
     }, () => res.success());
   }
 }

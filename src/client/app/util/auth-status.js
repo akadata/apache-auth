@@ -3,7 +3,7 @@ import request from 'browser-request';
 
 import browser from './browser';
 
-function redirectIfAuthenticated(loading) {
+function redirectIfAuthenticated(loading, cb = () => {}) {
   const redirectURL = browser.parseURL().query.redirect;
 
   loading((done) => {
@@ -14,7 +14,8 @@ function redirectIfAuthenticated(loading) {
         return redirectURL ? browser.go(redirectURL) : browser.push('/status');
       }
 
-      return done();
+      done();
+      return cb();
     });
   });
 }

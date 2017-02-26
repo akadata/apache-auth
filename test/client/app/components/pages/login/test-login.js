@@ -259,3 +259,39 @@ test('Duo 2FA successful response with redirect', (t) => {
   browser.go.restore();
   t.end();
 });
+
+test('Redirect to authorization request', (t) => {
+  sinon.stub(Fingerprint.prototype, 'get', (cb) => cb('fingerprint'));
+  sinon.stub(browser, 'push');
+  sinon.stub(request, 'get', (opts, cb) => {
+    t.equal(opts.url, '/auth-check', 'Endpoint for initial auth check');
+
+    return cb(null, {statusCode: 200});
+  });
+  sinon.stub(request, 'post', (opts, cb) => {
+    t.equal(opts.url, '/api/login/is-fingerprint-valid', 'Endpoint for checking fingerprint');
+    t.deepEqual(opts.json, {fingerprint: 'fingerprint'}, 'Fingerprint is passed as a parameter');
+
+    return cb(null, {});
+  });
+  const browserHistoryStub = sinon.stub(browserHistory, 'push');
+
+  jsdom.changeURL(window, 'https://auth.kevinlin.info/login?redirect=https://google.com');
+  const login = mount(
+    <Login loading={loading} />
+  );
+
+  login.find('.auth-request').simulate('click');
+
+  t.ok(browserHistoryStub.calledWith({
+    pathname: '/authorize',
+    query: {redirect: 'https://google.com'}
+  }), 'Redirect to authorization page with redirect URL');
+
+  request.get.restore();
+  request.post.restore();
+  browser.push.restore();
+  Fingerprint.prototype.get.restore();
+  browserHistory.push.restore();
+  t.end();
+});

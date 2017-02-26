@@ -1,4 +1,5 @@
 import './admin';
+import './authorize';
 import './blacklist';
 import './login';
 import './logout';

@@ -143,9 +143,10 @@ test('Expired authorization request', (t) => {
 });
 
 test('Upstream authentication validation error', (t) => {
-  const checkStub = sinon.stub(authenticate, 'check', (username, password, cb) => {
+  const checkStub = sinon.stub(authenticate, 'authRequest', (username, password, duration, cb) => {
     t.equal(username, 'username', 'Username is fetched from database');
     t.equal(password, 'password', 'password is fetched from database');
+    t.equal(duration, 30, 'Default duration of 30 minutes');
 
     return cb('error');
   });
@@ -183,20 +184,21 @@ test('Upstream authentication validation error', (t) => {
   t.ok(mockRes.error.calledWith(500, 'There was an upstream error from the authentication server.'),
     'Upstream authentication validation error');
 
-  authenticate.check.restore();
+  authenticate.authRequest.restore();
   t.end();
 });
 
 test('Successful authentication with upstream server and cookie modification', (t) => {
   const clock = sinon.useFakeTimers(1488124270946);
-  const checkStub = sinon.stub(authenticate, 'check', (username, password, cb) => {
+  const checkStub = sinon.stub(authenticate, 'authRequest', (username, password, duration, cb) => {
     t.equal(username, 'username', 'Username is fetched from database');
     t.equal(password, 'password', 'password is fetched from database');
+    t.equal(duration, 30, 'Default duration of 30 minutes');
 
     const resp = {
       statusCode: 200,
       headers: {
-        'set-cookie': ['kiwi-session=cookie']
+        'set-cookie': ['kiwi-session=cookie+special/characters']
       }
     };
     return cb(null, resp);
@@ -222,16 +224,8 @@ test('Successful authentication with upstream server and cookie modification', (
         },
 
         update(opts, modification, cb) {
-          const expectCookie = [
-            'kiwi-session=cookie',
-            'Path=/',
-            'Expires=Sun, 26 Feb 2017 16:21:10 GMT',
-            'HttpOnly',
-            'Secure'
-          ].join('; ');
-
           t.equal(opts._id, 'id', 'ID is passed from request');
-          t.deepEqual(modification, {$set: {cookie: expectCookie}});
+          t.deepEqual(modification, {$set: {cookie: 'kiwi-session=cookie+special/characters'}});
 
           return cb();
         }
@@ -253,7 +247,7 @@ test('Successful authentication with upstream server and cookie modification', (
   t.ok(checkStub.called, 'Upstream authentication attempt with database credentials');
   t.ok(mockRes.success.called, 'Request is successful');
 
-  authenticate.check.restore();
+  authenticate.authRequest.restore();
   clock.restore();
   t.end();
 });

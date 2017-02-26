@@ -1,2 +1,18 @@
 @import '../universal/colors';
 
+.auth-request {
+  bottom: 0;
+  color: $gray-50;
+  cursor: pointer;
+  height: 20px;
+  opacity: 0;
+  padding: 20px;
+  position: fixed;
+  right: 0;
+  transition: all 0.15s ease;
+  width: 20px;
+}
+
+.auth-request:hover {
+  opacity: 1;
+}
